@@ -1,0 +1,36 @@
+<h2>Belépés</h2>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="username">Felhasználónév:</label>
+    <input id="username" type="text" formControlName="username" />
+    <div
+      *ngIf="username?.invalid && (username?.touched || username?.dirty)"
+      style="color: red"
+    >
+      <div *ngIf="username?.errors?.['required']">
+        Felhasználónév megadása kötelező.
+      </div>
+      <div *ngIf="username?.errors?.['minlength']">
+        Legalább 3 karakter kell.
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <label for="password">Jelszó:</label>
+    <input id="password" type="password" formControlName="password" />
+    <div
+      *ngIf="password?.invalid && (password?.touched || password?.dirty)"
+      style="color: red"
+    >
+      <div *ngIf="password?.errors?.['required']">
+        Jelszó megadása kötelező.
+      </div>
+      <div *ngIf="password?.errors?.['minlength']">
+        Legalább 6 karakter kell.
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="loginForm.invalid">Bejelentkezés</button>
+</form>
