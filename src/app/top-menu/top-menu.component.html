@@ -1,0 +1,27 @@
+<!-- top-menu.component.html -->
+<div class="pos-f-t">
+  <div
+    [class.show]="isOpen"
+    class="collapse bg-dark p-1"
+    id="navbarToggleExternalContent"
+  >
+    <div class="d-flex justify-content-end">
+      <button mat-raised-button class="btn btn-primary" (click)="openDiagram()">
+        Login
+      </button>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-dark bg-dark d-flex justify-content-end p-1">
+    <button
+      class="navbar-toggler"
+      type="button"
+      (click)="toggleMenu()"
+      aria-controls="navbarToggleExternalContent"
+      [attr.aria-expanded]="isOpen"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+</div>

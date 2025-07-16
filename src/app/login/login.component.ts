@@ -6,6 +6,7 @@ import {
   FormControl,
   Validators,
 } from '@angular/forms';
+import { ApiClient, LoginDto } from '../ApiClient';
 
 @Component({
   selector: 'app-login',
@@ -15,28 +16,28 @@ import {
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
+  public userNameController = new FormControl('', [Validators.required]);
+  public passwordController = new FormControl('', [
+    Validators.required,
+    Validators.minLength(6),
+  ]);
   loginForm = new FormGroup({
-    username: new FormControl('', [
-      Validators.required,
-      Validators.minLength(3),
-    ]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
-    ]),
+    username: this.userNameController,
+    password: this.passwordController,
   });
 
-  get username() {
-    return this.loginForm.get('username');
-  }
-
-  get password() {
-    return this.loginForm.get('password');
-  }
+  /**
+   *
+  //  */
+  // constructor(private client: ApiClient) {}
 
   onSubmit() {
     if (this.loginForm.valid) {
       console.log('Belépési adatok:', this.loginForm.value);
+      // this.client.login({
+      //   email: this.userNameController?.value,
+      //   password: this.passwordController?.value,
+      // } as LoginDto);
       // Itt hívd a backend szolgáltatást vagy más logikát
     } else {
       this.loginForm.markAllAsTouched(); // jelzi a hibákat, ha submitnál érvénytelen

@@ -1,36 +1,61 @@
-<h2>Belépés</h2>
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <div>
-    <label for="username">Felhasználónév:</label>
-    <input id="username" type="text" formControlName="username" />
-    <div
-      *ngIf="username?.invalid && (username?.touched || username?.dirty)"
-      style="color: red"
-    >
-      <div *ngIf="username?.errors?.['required']">
-        Felhasználónév megadása kötelező.
-      </div>
-      <div *ngIf="username?.errors?.['minlength']">
-        Legalább 3 karakter kell.
+<body>
+  <h2>Login</h2>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="email">
+      <label for="userNameController">Email</label>
+      <input
+        id="userNameController"
+        type="text"
+        [formControl]="userNameController"
+        class="form-control form-control-sm"
+      />
+      <div
+        *ngIf="
+          userNameController?.invalid &&
+          (userNameController?.touched || userNameController?.dirty)
+        "
+        style="color: red"
+      >
+        <div *ngIf="userNameController?.errors?.['required']">
+          Felhasználónév megadása kötelező.
+        </div>
+        <div *ngIf="userNameController?.errors?.['minlength']">
+          Legalább 3 karakter kell.
+        </div>
       </div>
     </div>
-  </div>
 
-  <div>
-    <label for="password">Jelszó:</label>
-    <input id="password" type="password" formControlName="password" />
-    <div
-      *ngIf="password?.invalid && (password?.touched || password?.dirty)"
-      style="color: red"
-    >
-      <div *ngIf="password?.errors?.['required']">
-        Jelszó megadása kötelező.
-      </div>
-      <div *ngIf="password?.errors?.['minlength']">
-        Legalább 6 karakter kell.
+    <div class="password">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        [formControl]="this.passwordController"
+        class="form-control form-control-sm"
+      />
+      <div
+        *ngIf="
+          passwordController?.invalid &&
+          (passwordController?.touched || passwordController?.dirty)
+        "
+        style="color: red"
+      >
+        <div *ngIf="passwordController?.errors?.['required']">
+          Jelszó megadása kötelező.
+        </div>
+        <div *ngIf="passwordController?.errors?.['minlength']">
+          Legalább 6 karakter kell.
+        </div>
       </div>
     </div>
-  </div>
 
-  <button type="submit" [disabled]="loginForm.invalid">Bejelentkezés</button>
-</form>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="loginForm.invalid"
+    >
+      Bejelentkezés
+    </button>
+  </form>
+</body>

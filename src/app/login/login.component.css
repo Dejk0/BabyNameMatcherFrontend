@@ -1,0 +1,34 @@
+form {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+body {
+  padding: 20px;
+  border-color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.email,
+.password {
+  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+input {
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .no-radius-dialog .mat-mdc-dialog-surface {
+  border-radius: 0 !important;
+}
