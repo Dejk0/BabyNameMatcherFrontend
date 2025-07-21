@@ -8,6 +8,7 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { AuthInterceptor } from './auth/interceptor';
+import { ApiClient, API_BASE_URL } from './ApiClient';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +19,11 @@ export const appConfig: ApplicationConfig = {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
+    },
+    ApiClient,
+    {
+      provide: API_BASE_URL,
+      useValue: 'http://localhost:5053',
     },
   ],
 };

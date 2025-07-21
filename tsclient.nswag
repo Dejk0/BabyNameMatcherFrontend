@@ -13,14 +13,13 @@
       "className": "ApiClient",
       "moduleName": "",
       "namespace": "",
-      "typeScriptVersion": 4.7,
-      "template": "Fetch",
-      "promiseType": "Promise",
+      "typeScriptVersion": 5.8,
+      "template": "Angular",
       "httpClass": "HttpClient",
       "withCredentials": false,
       "useSingletonProvider": true,
       "injectionTokenType": "InjectionToken",
-      "rxJsVersion": 6.0,
+      "rxJsVersion": 7.8,
       "dateTimeType": "Date",
       "nullValue": "Undefined",
       "generateClientClasses": true,
@@ -64,8 +63,10 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "src/app/ApiClient.ts",
-      "newLineBehavior": "Auto"
+      "output": 'src/app/ApiClient.ts',
+      "newLineBehavior": "Auto",
+      "useBaseUrl": true,
+      "baseUrl": "http://localhost:5053",
     }
   }
 }

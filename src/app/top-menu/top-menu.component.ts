@@ -1,10 +1,17 @@
 import { Component } from '@angular/core';
-import { LoginComponent } from '../login/login.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { LoginComponent } from '../login/login.component';
+import { AuthService } from '../auth/auth.module';
+import {
+  NgbDropdownModule,
+  NgbModal,
+  NgbScrollSpyModule,
+} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-top-menu',
-  imports: [],
+  imports: [CommonModule, NgbScrollSpyModule, NgbDropdownModule],
   templateUrl: './top-menu.component.html',
   styleUrl: './top-menu.component.css',
 })
@@ -15,11 +22,20 @@ export class TopMenuComponent {
     this.isOpen = !this.isOpen;
   }
 
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private dialog: NgbModal,
+    public auth: AuthService,
+    private modalService: NgbModal
+  ) {}
 
-  openDiagram(): void {
-    this.dialog.open(LoginComponent, {
-      panelClass: 'no-radius-dialog',
+  openLoginModal() {
+    this.modalService.open(LoginComponent, {
+      size: 'md',
+      backdrop: 'static',
     });
+  }
+
+  onLogout() {
+    this.auth.logout();
   }
 }

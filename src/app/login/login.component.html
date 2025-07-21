@@ -3,24 +3,24 @@
 
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <div class="email">
-      <label for="userNameController">Email</label>
+      <label for="emailController">Email</label>
       <input
-        id="userNameController"
+        id="emailController"
         type="text"
-        [formControl]="userNameController"
+        [formControl]="emailController"
         class="form-control form-control-sm"
       />
       <div
         *ngIf="
-          userNameController?.invalid &&
-          (userNameController?.touched || userNameController?.dirty)
+          emailController?.invalid &&
+          (emailController?.touched || emailController?.dirty)
         "
         style="color: red"
       >
-        <div *ngIf="userNameController?.errors?.['required']">
+        <div *ngIf="emailController?.errors?.['required']">
           Felhasználónév megadása kötelező.
         </div>
-        <div *ngIf="userNameController?.errors?.['minlength']">
+        <div *ngIf="emailController?.errors?.['minlength']">
           Legalább 3 karakter kell.
         </div>
       </div>

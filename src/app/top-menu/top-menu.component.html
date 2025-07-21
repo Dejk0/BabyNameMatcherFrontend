@@ -1,27 +1,16 @@
-<!-- top-menu.component.html -->
-<div class="pos-f-t">
-  <div
-    [class.show]="isOpen"
-    class="collapse bg-dark p-1"
-    id="navbarToggleExternalContent"
-  >
-    <div class="d-flex justify-content-end">
-      <button mat-raised-button class="btn btn-primary" (click)="openDiagram()">
+<nav class="navbar bg-light px-3 mb-3">
+  <span class="navbar-brand"></span>
+
+  <ul class="nav nav-pills ms-auto">
+    <li class="nav-item" *ngIf="!auth.isLoggedIn">
+      <button class="btn btn-outline-primary" (click)="openLoginModal()">
         Login
       </button>
-    </div>
-  </div>
-
-  <nav class="navbar navbar-dark bg-dark d-flex justify-content-end p-1">
-    <button
-      class="navbar-toggler"
-      type="button"
-      (click)="toggleMenu()"
-      aria-controls="navbarToggleExternalContent"
-      [attr.aria-expanded]="isOpen"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  </nav>
-</div>
+    </li>
+    <li class="nav-item" *ngIf="auth.isLoggedIn">
+      <button class="btn btn-outline-danger" (click)="onLogout()">
+        Logout
+      </button>
+    </li>
+  </ul>
+</nav>
