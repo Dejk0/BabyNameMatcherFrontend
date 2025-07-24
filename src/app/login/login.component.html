@@ -1,7 +1,7 @@
 <body>
   <h2>Login</h2>
 
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
     <div class="email">
       <label for="emailController">Email</label>
       <input
@@ -58,4 +58,11 @@
       Bejelentkezés
     </button>
   </form>
+  <button
+    (click)="OnRegist()"
+    class="btn btn-primary"
+    [disabled]="loginForm.invalid"
+  >
+    Regisztráció
+  </button>
 </body>

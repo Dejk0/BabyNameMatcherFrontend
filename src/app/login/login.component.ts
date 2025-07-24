@@ -12,6 +12,10 @@ import {
   NgbModal,
   NgbModalRef,
 } from '@ng-bootstrap/ng-bootstrap';
+import { ApiClient, RegisterResultDto, RegistrRequestDto } from '../ApiClient';
+import { expand, subscribeOn, takeUntil, tap } from 'rxjs';
+import { Subject } from 'rxjs';
+import { OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +24,7 @@ import {
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   public emailController = new FormControl('', [Validators.required]);
   public passwordController = new FormControl('', [
     Validators.required,
@@ -30,13 +34,14 @@ export class LoginComponent {
     username: this.emailController,
     password: this.passwordController,
   });
-
+  private destroy$ = new Subject<void>();
   /**
    *
   //  */
   constructor(
     private auth: AuthService,
-    public modal: NgbActiveModal // csak ezt használd a modál zárására
+    private modal: NgbActiveModal,
+    private client: ApiClient
   ) {}
 
   close() {
@@ -47,7 +52,7 @@ export class LoginComponent {
     this.modal.dismiss();
   }
 
-  onSubmit() {
+  onLogin() {
     const email = this.emailController.value;
     const password = this.passwordController.value;
 
@@ -63,5 +68,32 @@ export class LoginComponent {
         alert('Hibás email vagy jelszó!');
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  OnRegist() {
+    const email = this.emailController.value;
+    const password = this.passwordController.value;
+
+    if (!email || !password) {
+      return;
+    }
+
+    this.client
+      .register({
+        email: email,
+        password: password,
+        confirmPassword: password,
+        name: 'string',
+        family: 'string',
+      } as RegistrRequestDto)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((x) => {
+        console.log(x);
+      });
   }
 }
