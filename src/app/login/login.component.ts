@@ -16,6 +16,8 @@ import { ApiClient, RegisterResultDto, RegistrRequestDto } from '../ApiClient';
 import { expand, subscribeOn, takeUntil, tap } from 'rxjs';
 import { Subject } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { LocPipe } from '../pipes/loc.pipe';
+import { LocalizationService } from '../services/localization.service';
 
 @Component({
   selector: 'app-login',
@@ -30,8 +32,9 @@ export class LoginComponent implements OnDestroy {
     Validators.required,
     Validators.minLength(6),
   ]);
+  public userNameController = new FormControl('', [Validators.required]);
   loginForm = new FormGroup({
-    username: this.emailController,
+    email: this.emailController,
     password: this.passwordController,
   });
   private destroy$ = new Subject<void>();
@@ -41,7 +44,7 @@ export class LoginComponent implements OnDestroy {
   constructor(
     private auth: AuthService,
     private modal: NgbActiveModal,
-    private client: ApiClient
+    public loc: LocalizationService
   ) {}
 
   close() {
@@ -76,24 +79,16 @@ export class LoginComponent implements OnDestroy {
   }
 
   OnRegist() {
+    this.loginForm.markAllAsTouched();
+    if (!this.loginForm.valid) {
+      return;
+    }
+
     const email = this.emailController.value;
     const password = this.passwordController.value;
 
     if (!email || !password) {
       return;
     }
-
-    this.client
-      .register({
-        email: email,
-        password: password,
-        confirmPassword: password,
-        name: 'string',
-        family: 'string',
-      } as RegistrRequestDto)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((x) => {
-        console.log(x);
-      });
   }
 }

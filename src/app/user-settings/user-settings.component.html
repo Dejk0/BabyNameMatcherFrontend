@@ -1,0 +1,36 @@
+<div class="modal-header">
+  <h4 class="modal-title">Felhasználói beállítások</h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Bezárás"
+    (click)="close()"
+  ></button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="settingsForm">
+    <div class="mb-3">
+      <label>Név</label>
+      <input type="text" class="form-control" formControlName="name" />
+    </div>
+
+    <div class="mb-3">
+      <label>Email</label>
+      <input type="email" class="form-control" formControlName="email" />
+    </div>
+
+    <div class="mb-3">
+      <label>Nyelv</label>
+      <select class="form-select" formControlName="language">
+        <option value="hu">Magyar</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-secondary" (click)="close()">Mégse</button>
+  <button class="btn btn-primary" (click)="save()">Mentés</button>
+</div>

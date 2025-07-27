@@ -9,6 +9,7 @@ import {
 } from '@angular/common/http';
 import { AuthInterceptor } from './auth/interceptor';
 import { ApiClient, API_BASE_URL } from './ApiClient';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,5 +26,6 @@ export const appConfig: ApplicationConfig = {
       provide: API_BASE_URL,
       useValue: 'http://localhost:5053',
     },
+    provideAnimations(),
   ],
 };

@@ -1,0 +1,139 @@
+<body>
+  <form [formGroup]="registrationForm" (ngSubmit)="OnRegist()">
+    <div class="familyName">
+      <label for="familynameController">{{
+        loc.get(12, "The child family name.")
+      }}</label>
+      <input
+        id="familynameController"
+        type="text"
+        [formControl]="familyNameController"
+        class="form-control form-control-sm"
+      />
+      <div
+        *ngIf="
+          familyNameController?.invalid &&
+          (familyNameController?.touched || familyNameController?.dirty)
+        "
+        style="color: red"
+      >
+        <div *ngIf="familyNameController?.errors?.['required']">
+          {{ loc.get(13, "The child family name is required.") }}
+        </div>
+      </div>
+    </div>
+
+    <div class="username">
+      <label for="usernameController">{{ loc.get(11, "Username") }}</label>
+      <input
+        id="usernameController"
+        type="text"
+        [formControl]="userNameController"
+        class="form-control form-control-sm"
+      />
+      <div
+        *ngIf="
+          userNameController?.invalid &&
+          (userNameController?.touched || userNameController?.dirty)
+        "
+        style="color: red"
+      >
+        <div *ngIf="userNameController?.errors?.['required']">
+          {{ loc.get(3, "Username is required.") }}
+        </div>
+      </div>
+    </div>
+
+    <div class="email">
+      <label for="emailController">{{ loc.get(5, "Email") }}</label>
+      <input
+        id="emailController"
+        type="text"
+        [formControl]="emailController"
+        class="form-control form-control-sm"
+      />
+      <div
+        *ngIf="
+          emailController?.invalid &&
+          (emailController?.touched || emailController?.dirty)
+        "
+        style="color: red"
+      >
+        <div *ngIf="emailController?.errors?.['required']">
+          {{ loc.get(10, "Email is required.") }}
+        </div>
+        <div *ngIf="emailController?.errors?.['minlength']">
+          {{ loc.get(4, "At least 3 characters are required") }}
+        </div>
+      </div>
+    </div>
+
+    <div class="password">
+      <label for="password"> {{ loc.get(6, "Password") }}</label>
+      <input
+        id="password"
+        type="password"
+        [formControl]="passwordController"
+        class="form-control form-control-sm"
+      />
+      <div
+        *ngIf="
+          passwordController?.invalid &&
+          (passwordController?.touched || passwordController?.dirty)
+        "
+        style="color: red"
+      >
+        <div *ngIf="passwordController?.errors?.['required']">
+          {{ loc.get(7, "Password is required.") }}
+        </div>
+        <div *ngIf="passwordController?.errors?.['minlength']">
+          {{ loc.get(8, "At least 6 characters are required.") }}
+        </div>
+      </div>
+    </div>
+
+    <div class="password">
+      <label for="confirmPassword">
+        {{ loc.get(14, "Password confirmation") }}</label
+      >
+      <input
+        id="confirmPassword"
+        type="password"
+        [formControl]="confirmPasswordController"
+        class="form-control form-control-sm"
+      />
+      <div
+        *ngIf="
+          confirmPasswordController?.invalid &&
+          (confirmPasswordController?.touched ||
+            confirmPasswordController?.dirty)
+        "
+        style="color: red"
+      >
+        <div *ngIf="confirmPasswordController?.errors?.['required']">
+          {{ loc.get(7, "Password is required.") }}
+        </div>
+        <div *ngIf="confirmPasswordController?.errors?.['minlength']">
+          {{ loc.get(8, "At least 6 characters are required.") }}
+        </div>
+      </div>
+    </div>
+    <div
+      style="color: red"
+      *ngIf="registrationForm.errors?.['passwordMismatch'] &&
+            (confirmPasswordController.touched || confirmPasswordController.dirty)"
+    >
+      {{ loc.get(15, "different passwords") }}
+    </div>
+    <div *ngIf="registrationForm.errors?.['serverError']" class="text-danger">
+      {{ registrationForm.errors?.['serverError'] }}
+    </div>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="registrationForm.invalid"
+    >
+      {{ loc.get(9, "Registration") }}
+    </button>
+  </form>
+</body>

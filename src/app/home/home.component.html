@@ -1,3 +1,16 @@
-<app-top-menu></app-top-menu>
+<body>
+  <app-top-menu></app-top-menu>
 
-<p>home works!</p>
+  <div class="scroll-container">
+    <div class="scroll-content">
+      <div
+        *ngFor="let item of names; let i = index"
+        cdkDrag
+        (cdkDragMoved)="onDragMoved($event, i)"
+        (cdkDragReleased)="onDragReleased($event, i)"
+      >
+        <app-name-card [name]="item.name"></app-name-card>
+      </div>
+    </div>
+  </div>
+</body>

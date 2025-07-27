@@ -1,9 +1,7 @@
 <body>
-  <h2>Login</h2>
-
   <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
     <div class="email">
-      <label for="emailController">Email</label>
+      <label for="emailController">{{ loc.get(5, "Email") }}</label>
       <input
         id="emailController"
         type="text"
@@ -18,16 +16,16 @@
         style="color: red"
       >
         <div *ngIf="emailController?.errors?.['required']">
-          Felhasználónév megadása kötelező.
+          {{ loc.get(10, "Email is required.") }}
         </div>
         <div *ngIf="emailController?.errors?.['minlength']">
-          Legalább 3 karakter kell.
+          {{ loc.get(4, "At least 3 characters are required") }}
         </div>
       </div>
     </div>
 
     <div class="password">
-      <label for="password">Password</label>
+      <label for="password"> {{ loc.get(6, "Password") }}</label>
       <input
         id="password"
         type="password"
@@ -42,10 +40,10 @@
         style="color: red"
       >
         <div *ngIf="passwordController?.errors?.['required']">
-          Jelszó megadása kötelező.
+          {{ loc.get(7, "Password is required.") }}
         </div>
         <div *ngIf="passwordController?.errors?.['minlength']">
-          Legalább 6 karakter kell.
+          {{ loc.get(8, "At least 6 characters are required.") }}
         </div>
       </div>
     </div>
@@ -55,14 +53,7 @@
       class="btn btn-primary"
       [disabled]="loginForm.invalid"
     >
-      Bejelentkezés
+      {{ loc.get(1, "Login") }}
     </button>
   </form>
-  <button
-    (click)="OnRegist()"
-    class="btn btn-primary"
-    [disabled]="loginForm.invalid"
-  >
-    Regisztráció
-  </button>
 </body>

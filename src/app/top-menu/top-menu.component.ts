@@ -8,6 +8,11 @@ import {
   NgbModal,
   NgbScrollSpyModule,
 } from '@ng-bootstrap/ng-bootstrap';
+import { UserSettingsComponent } from '../user-settings/user-settings.component';
+import { LocPipe } from '../pipes/loc.pipe';
+import { LocalizationService } from '../services/localization.service';
+import { RegistrationComponent } from '../registration/registration.component';
+import { LoginOrRegisterComponentComponent } from '../login-or-register-component/login-or-register-component.component';
 
 @Component({
   selector: 'app-top-menu',
@@ -23,13 +28,20 @@ export class TopMenuComponent {
   }
 
   constructor(
-    private dialog: NgbModal,
     public auth: AuthService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    public loc: LocalizationService
   ) {}
 
   openLoginModal() {
-    this.modalService.open(LoginComponent, {
+    this.modalService.open(LoginOrRegisterComponentComponent, {
+      size: 'md',
+      backdrop: 'static',
+    });
+  }
+
+  openUserSettingsModal() {
+    this.modalService.open(UserSettingsComponent, {
       size: 'md',
       backdrop: 'static',
     });

@@ -1,0 +1,21 @@
+<ul
+  ngbNav
+  #nav="ngbNav"
+  [(activeId)]="active"
+  class="nav nav-tabs justify-content-center"
+>
+  <li [ngbNavItem]="1">
+    <button ngbNavLink>{{ loc.get(1, "Login") }}</button>
+    <ng-template ngbNavContent>
+      <app-login></app-login>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2">
+    <button ngbNavLink>{{ loc.get(9, "Registration") }}</button>
+    <ng-template ngbNavContent>
+      <app-registration></app-registration>
+    </ng-template>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>

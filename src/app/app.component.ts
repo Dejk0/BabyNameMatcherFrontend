@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { LocalizationService } from './services/localization.service';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'my-app';
+
+  constructor(private locStore: LocalizationService) {
+    this.locStore.loadLocalizations('hu');
+  }
 }

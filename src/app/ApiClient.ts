@@ -141,6 +141,62 @@ export class ApiClient {
      * @param body (optional) 
      * @return OK
      */
+    getLocalizations(body: LocalizationParamsDto | undefined): Observable<LocalizationResultDto> {
+        let url_ = this.baseUrl + "/api/Localization/GetLocalizations";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLocalizations(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLocalizations(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<LocalizationResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<LocalizationResultDto>;
+        }));
+    }
+
+    protected processGetLocalizations(response: HttpResponseBase): Observable<LocalizationResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LocalizationResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
     login(body: LoginRequestDto | undefined): Observable<TokenResponse> {
         let url_ = this.baseUrl + "/api/Auth/login";
         url_ = url_.replace(/[?&]$/, "");
@@ -342,6 +398,102 @@ export interface IChangePasswordRequestDto {
     newPassword?: string | undefined;
 }
 
+export class LocalizationParamsDto implements ILocalizationParamsDto {
+    languageCode?: string | undefined;
+    key?: number[] | undefined;
+
+    constructor(data?: ILocalizationParamsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.languageCode = _data["languageCode"];
+            if (Array.isArray(_data["key"])) {
+                this.key = [] as any;
+                for (let item of _data["key"])
+                    this.key!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): LocalizationParamsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocalizationParamsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["languageCode"] = this.languageCode;
+        if (Array.isArray(this.key)) {
+            data["key"] = [];
+            for (let item of this.key)
+                data["key"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface ILocalizationParamsDto {
+    languageCode?: string | undefined;
+    key?: number[] | undefined;
+}
+
+export class LocalizationResultDto implements ILocalizationResultDto {
+    localization?: { [key: string]: string; } | undefined;
+
+    constructor(data?: ILocalizationResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (_data["localization"]) {
+                this.localization = {} as any;
+                for (let key in _data["localization"]) {
+                    if (_data["localization"].hasOwnProperty(key))
+                        (<any>this.localization)![key] = _data["localization"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): LocalizationResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocalizationResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (this.localization) {
+            data["localization"] = {};
+            for (let key in this.localization) {
+                if (this.localization.hasOwnProperty(key))
+                    (<any>data["localization"])[key] = (<any>this.localization)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface ILocalizationResultDto {
+    localization?: { [key: string]: string; } | undefined;
+}
+
 export class LoginRequestDto implements ILoginRequestDto {
     email?: string | undefined;
     password?: string | undefined;
@@ -427,8 +579,8 @@ export interface IRegisterResultDto {
 }
 
 export class RegistrRequestDto implements IRegistrRequestDto {
-    name?: string | undefined;
-    family?: string | undefined;
+    userName?: string | undefined;
+    familyName?: string | undefined;
     email?: string | undefined;
     password?: string | undefined;
     confirmPassword?: string | undefined;
@@ -444,8 +596,8 @@ export class RegistrRequestDto implements IRegistrRequestDto {
 
     init(_data?: any) {
         if (_data) {
-            this.name = _data["name"];
-            this.family = _data["family"];
+            this.userName = _data["userName"];
+            this.familyName = _data["familyName"];
             this.email = _data["email"];
             this.password = _data["password"];
             this.confirmPassword = _data["confirmPassword"];
@@ -461,8 +613,8 @@ export class RegistrRequestDto implements IRegistrRequestDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["family"] = this.family;
+        data["userName"] = this.userName;
+        data["familyName"] = this.familyName;
         data["email"] = this.email;
         data["password"] = this.password;
         data["confirmPassword"] = this.confirmPassword;
@@ -471,8 +623,8 @@ export class RegistrRequestDto implements IRegistrRequestDto {
 }
 
 export interface IRegistrRequestDto {
-    name?: string | undefined;
-    family?: string | undefined;
+    userName?: string | undefined;
+    familyName?: string | undefined;
     email?: string | undefined;
     password?: string | undefined;
     confirmPassword?: string | undefined;
