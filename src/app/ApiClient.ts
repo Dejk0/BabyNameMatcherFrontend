@@ -305,7 +305,7 @@ export class ApiClient {
      * @param body (optional) 
      * @return OK
      */
-    register(body: RegistrRequestDto | undefined): Observable<RegisterResultDto> {
+    register(body: RegistrParamsDto | undefined): Observable<RegisterResultDto> {
         let url_ = this.baseUrl + "/api/Auth/register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -347,6 +347,62 @@ export class ApiClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = RegisterResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    registerWithPair(body: RegistrWithPairParamsDto | undefined): Observable<RegistrWithPairResultDto> {
+        let url_ = this.baseUrl + "/api/Auth/registerWithPair";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRegisterWithPair(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRegisterWithPair(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<RegistrWithPairResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<RegistrWithPairResultDto>;
+        }));
+    }
+
+    protected processRegisterWithPair(response: HttpResponseBase): Observable<RegistrWithPairResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = RegistrWithPairResultDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -578,14 +634,14 @@ export interface IRegisterResultDto {
     error?: string | undefined;
 }
 
-export class RegistrRequestDto implements IRegistrRequestDto {
+export class RegistrParamsDto implements IRegistrParamsDto {
     userName?: string | undefined;
     familyName?: string | undefined;
     email?: string | undefined;
     password?: string | undefined;
     confirmPassword?: string | undefined;
 
-    constructor(data?: IRegistrRequestDto) {
+    constructor(data?: IRegistrParamsDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -604,9 +660,9 @@ export class RegistrRequestDto implements IRegistrRequestDto {
         }
     }
 
-    static fromJS(data: any): RegistrRequestDto {
+    static fromJS(data: any): RegistrParamsDto {
         data = typeof data === 'object' ? data : {};
-        let result = new RegistrRequestDto();
+        let result = new RegistrParamsDto();
         result.init(data);
         return result;
     }
@@ -622,12 +678,120 @@ export class RegistrRequestDto implements IRegistrRequestDto {
     }
 }
 
-export interface IRegistrRequestDto {
+export interface IRegistrParamsDto {
     userName?: string | undefined;
     familyName?: string | undefined;
     email?: string | undefined;
     password?: string | undefined;
     confirmPassword?: string | undefined;
+}
+
+export class RegistrWithPairParamsDto implements IRegistrWithPairParamsDto {
+    userName?: string | undefined;
+    familyName?: string | undefined;
+    email?: string | undefined;
+    password?: string | undefined;
+    confirmPassword?: string | undefined;
+    pairName?: string | undefined;
+    pairEmail?: string | undefined;
+
+    constructor(data?: IRegistrWithPairParamsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userName = _data["userName"];
+            this.familyName = _data["familyName"];
+            this.email = _data["email"];
+            this.password = _data["password"];
+            this.confirmPassword = _data["confirmPassword"];
+            this.pairName = _data["pairName"];
+            this.pairEmail = _data["pairEmail"];
+        }
+    }
+
+    static fromJS(data: any): RegistrWithPairParamsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RegistrWithPairParamsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userName"] = this.userName;
+        data["familyName"] = this.familyName;
+        data["email"] = this.email;
+        data["password"] = this.password;
+        data["confirmPassword"] = this.confirmPassword;
+        data["pairName"] = this.pairName;
+        data["pairEmail"] = this.pairEmail;
+        return data;
+    }
+}
+
+export interface IRegistrWithPairParamsDto {
+    userName?: string | undefined;
+    familyName?: string | undefined;
+    email?: string | undefined;
+    password?: string | undefined;
+    confirmPassword?: string | undefined;
+    pairName?: string | undefined;
+    pairEmail?: string | undefined;
+}
+
+export class RegistrWithPairResultDto implements IRegistrWithPairResultDto {
+    success?: boolean;
+    callbackUrl?: string | undefined;
+    error?: string | undefined;
+    pairCallbackUrl?: string | undefined;
+
+    constructor(data?: IRegistrWithPairResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.success = _data["success"];
+            this.callbackUrl = _data["callbackUrl"];
+            this.error = _data["error"];
+            this.pairCallbackUrl = _data["pairCallbackUrl"];
+        }
+    }
+
+    static fromJS(data: any): RegistrWithPairResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RegistrWithPairResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["success"] = this.success;
+        data["callbackUrl"] = this.callbackUrl;
+        data["error"] = this.error;
+        data["pairCallbackUrl"] = this.pairCallbackUrl;
+        return data;
+    }
+}
+
+export interface IRegistrWithPairResultDto {
+    success?: boolean;
+    callbackUrl?: string | undefined;
+    error?: string | undefined;
+    pairCallbackUrl?: string | undefined;
 }
 
 export class TokenResponse implements ITokenResponse {

@@ -12,6 +12,6 @@ export class AppComponent {
   title = 'my-app';
 
   constructor(private locStore: LocalizationService) {
-    this.locStore.loadLocalizations('hu');
+    this.locStore.loadLocalizations('en');
   }
 }

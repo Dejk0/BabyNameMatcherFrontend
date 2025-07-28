@@ -14,4 +14,9 @@ export const AppLoc = [
   13, // The child family name is required.
   14, // Password confirmation
   15, // different passwords
+  16, // Your partner's email address
+  17, // Your partner's email is required if you choose to register as a couple.
+  18, // Your partner's username
+  19, // Your partner's username is required if you choose to register as a couple.
+  20, // Pair registration
 ];

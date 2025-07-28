@@ -12,8 +12,6 @@ import {
   NgbModal,
   NgbModalRef,
 } from '@ng-bootstrap/ng-bootstrap';
-import { ApiClient, RegisterResultDto, RegistrRequestDto } from '../ApiClient';
-import { expand, subscribeOn, takeUntil, tap } from 'rxjs';
 import { Subject } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { LocPipe } from '../pipes/loc.pipe';

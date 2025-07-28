@@ -118,6 +118,80 @@
         </div>
       </div>
     </div>
+
+    <div class="form-check mb-3">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        [checked]="isPairRegistration"
+        (change)="onPairToggleChanged($event)"
+        id="pairToggle"
+      />
+      <label class="form-check-label" for="pairToggle">
+        {{ loc.get(20, "Pair registration") }}
+      </label>
+    </div>
+
+    <div class="pairReg" *ngIf="isPairRegistration">
+      <div class="username">
+        <label [for]="pairNameController">{{
+          loc.get(18, "Your partner's username")
+        }}</label>
+        <input
+          id="pairNameController"
+          type="text"
+          [formControl]="pairNameController"
+          class="form-control form-control-sm"
+          data-testid="pairName"
+        />
+        <div
+          *ngIf="
+            pairNameController?.invalid &&
+            (pairNameController?.touched || pairNameController?.dirty)
+          "
+          style="color: red"
+        >
+          <div *ngIf="pairNameController?.errors?.['required']">
+            {{
+              loc.get(
+                19,
+                "Your partner's username is required if you choose to register as a couple."
+              )
+            }}
+          </div>
+        </div>
+      </div>
+
+      <div class="email">
+        <label [for]="pairEmailController">{{
+          loc.get(16, "Your partner's email address")
+        }}</label>
+        <input
+          id="pairEmailController"
+          type="text"
+          [formControl]="pairEmailController"
+          class="form-control form-control-sm"
+          data-testid="pairEmail"
+        />
+        <div
+          *ngIf="
+            pairEmailController?.invalid &&
+            (pairEmailController?.touched || pairEmailController?.dirty)
+          "
+          style="color: red"
+        >
+          <div *ngIf="pairEmailController?.errors?.['required']">
+            {{
+              loc.get(
+                17,
+                "Your partner's email is required if you choose to register as a couple."
+              )
+            }}
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div
       style="color: red"
       *ngIf="registrationForm.errors?.['passwordMismatch'] &&

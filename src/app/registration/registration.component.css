@@ -18,6 +18,9 @@ body {
 .email,
 .username,
 .familyName,
+.pairEmail,
+.pairName,
+.pairReg,
 .password {
   gap: 12px;
   display: flex;
@@ -29,8 +32,4 @@ body {
 input {
   display: flex;
   flex-direction: column;
-}
-
-::ng-deep .no-radius-dialog .mat-mdc-dialog-surface {
-  border-radius: 0 !important;
 }

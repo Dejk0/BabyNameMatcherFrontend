@@ -10,7 +10,12 @@ import {
 } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { expand, Subject, takeUntil, throwError } from 'rxjs';
-import { ApiClient, RegisterResultDto, RegistrRequestDto } from '../ApiClient';
+import {
+  ApiClient,
+  RegisterResultDto,
+  RegistrParamsDto,
+  RegistrWithPairParamsDto,
+} from '../ApiClient';
 import { LocalizationService } from '../services/localization.service';
 import { CommonModule } from '@angular/common';
 
@@ -32,6 +37,9 @@ export class RegistrationComponent {
   ]);
   public userNameController = new FormControl('', [Validators.required]);
   public familyNameController = new FormControl('', [Validators.required]);
+  public pairEmailController = new FormControl('');
+  public pairNameController = new FormControl('');
+
   registrationForm = new FormGroup(
     {
       email: this.emailController,
@@ -39,9 +47,13 @@ export class RegistrationComponent {
       username: this.userNameController,
       familyname: this.familyNameController,
       confirmPassword: this.confirmPasswordController,
+      pairEmail: this.pairEmailController,
+      pairName: this.pairNameController,
     },
     { validators: passwordMatchValidator() }
   );
+
+  private _isPairRegistration = false;
 
   private destroy$ = new Subject<void>();
 
@@ -75,31 +87,91 @@ export class RegistrationComponent {
     const username = this.userNameController.value;
     const familyname = this.familyNameController.value;
     const confirmPassword = this.confirmPasswordController.value;
+    const pairEmail = this.pairEmailController.value;
+    const pairName = this.pairNameController.value;
 
-    if (!email || !password || !username || !familyname) {
+    if (
+      !email ||
+      !password ||
+      !username ||
+      !familyname ||
+      !confirmPassword ||
+      !pairEmail ||
+      !pairName
+    ) {
       return;
     }
 
-    this.client
-      .register({
-        email: email,
-        userName: username,
-        familyName: familyname,
-        password: password,
-        confirmPassword: confirmPassword,
-      } as RegistrRequestDto)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: RegisterResultDto) => {
-        if (!res) {
-          return;
-        }
-        if (res.error) {
-          this.registrationForm.setErrors({ serverError: res.error });
-        } else {
+    if (this.isPairRegistration) {
+      if (!this.pairEmailController.valid || !this.pairNameController.valid) {
+        return; // pármezők érvénytelenek
+      }
+
+      this.client
+        .registerWithPair({
+          email: this.emailController.value!,
+          userName: this.userNameController.value!,
+          familyName: this.familyNameController.value!,
+          password: this.passwordController.value!,
+          confirmPassword: this.confirmPasswordController.value!,
+          pairEmail: this.pairEmailController.value!,
+          pairName: this.pairNameController.value!,
+        } as RegistrWithPairParamsDto)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (res?.error) {
+            this.registrationForm.setErrors({ serverError: res.error });
+            return;
+          }
           console.log(res);
           this.modal.close();
-        }
-      });
+        });
+    } else {
+      this.client
+        .register({
+          email: this.emailController.value!,
+          userName: this.userNameController.value!,
+          familyName: this.familyNameController.value!,
+          password: this.passwordController.value!,
+          confirmPassword: this.confirmPasswordController.value!,
+        } as RegistrParamsDto)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (res?.error) {
+            this.registrationForm.setErrors({ serverError: res.error });
+            return;
+          }
+          console.log(res);
+          this.modal.close();
+        });
+    }
+  }
+
+  get isPairRegistration(): boolean {
+    return this._isPairRegistration;
+  }
+
+  set isPairRegistration(value: boolean) {
+    this._isPairRegistration = value;
+
+    if (value) {
+      this.pairEmailController.setValidators([
+        Validators.required,
+        Validators.email,
+      ]);
+      this.pairNameController.setValidators([Validators.required]);
+    } else {
+      this.pairEmailController.clearValidators();
+      this.pairNameController.clearValidators();
+    }
+
+    this.pairEmailController.updateValueAndValidity();
+    this.pairNameController.updateValueAndValidity();
+  }
+
+  onPairToggleChanged(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    this.isPairRegistration = checkbox.checked;
   }
 }
 
