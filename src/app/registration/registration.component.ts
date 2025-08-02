@@ -12,6 +12,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { expand, Subject, takeUntil, throwError } from 'rxjs';
 import {
   ApiClient,
+  BaseValidResponse,
   RegisterResultDto,
   RegistrParamsDto,
   RegistrWithPairParamsDto,
@@ -136,7 +137,7 @@ export class RegistrationComponent {
           confirmPassword: this.confirmPasswordController.value!,
         } as RegistrParamsDto)
         .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
+        .subscribe((res: RegisterResultDto) => {
           if (res?.error) {
             this.registrationForm.setErrors({ serverError: res.error });
             return;

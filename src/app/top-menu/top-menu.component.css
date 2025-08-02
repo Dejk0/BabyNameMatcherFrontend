@@ -1,3 +1,8 @@
 ::ng-deep .no-radius-dialog .mat-mdc-dialog-surface {
   border-radius: 0 !important;
 }
+
+.flag-icon {
+  width: 1.5em;
+  height: 1em;
+}

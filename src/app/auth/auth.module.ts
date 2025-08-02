@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { ApiClient, LoginRequestDto, TokenResponse } from '../ApiClient';
+import { ApiClient, LoginParamsDto, TokenResponse } from '../ApiClient';
 import { jwtDecode } from 'jwt-decode'; // ✅ Ez működik ESM alatt
 
 interface TokenPayload {
@@ -21,7 +21,7 @@ export class AuthService {
   constructor(private client: ApiClient) {}
 
   login(email: string, password: string): Observable<TokenResponse> {
-    return this.client.login({ email, password } as LoginRequestDto).pipe(
+    return this.client.login({ email, password } as LoginParamsDto).pipe(
       tap((response: TokenResponse) => {
         if (response.token) {
           localStorage.setItem(this.TOKEN_KEY, response.token);

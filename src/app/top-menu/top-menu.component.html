@@ -1,6 +1,33 @@
 <nav class="navbar bg-light px-3 mb-3">
   <span class="navbar-brand"></span>
 
+  <!-- Nyelvválasztó toggle -->
+  <div class="btn-group" role="group">
+    <button
+      type="button"
+      class="btn"
+      [ngClass]="{
+        'btn-outline-primary': selectedLang !== 'hu',
+        'btn-primary': selectedLang === 'hu'
+      }"
+      (click)="changeLang('hu')"
+    >
+      <img src="https://flagcdn.com/w40/hu.png" alt="HU" width="24" />
+    </button>
+    <button
+      type="button"
+      class="btn"
+      [ngClass]="{
+        'btn-outline-primary': selectedLang !== 'en',
+        'btn-primary': selectedLang === 'en'
+      }"
+      (click)="changeLang('en')"
+    >
+      <img src="https://flagcdn.com/w40/gb.png" alt="EN" width="24" />
+    </button>
+  </div>
+
+  <!-- Login/logout gombok -->
   <ul class="nav nav-pills ms-auto">
     <li class="nav-item" *ngIf="!auth.isLoggedIn">
       <button class="btn btn-outline-primary" (click)="openLoginModal()">

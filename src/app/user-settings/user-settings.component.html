@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title">Felhasználói beállítások</h4>
+  <h4 class="modal-title">{{ loc.get(21, "User settings") }}</h4>
   <button
     type="button"
     class="btn-close"
@@ -11,26 +11,27 @@
 <div class="modal-body">
   <form [formGroup]="settingsForm">
     <div class="mb-3">
-      <label>Név</label>
+      <label>{{ loc.get(22, "Name") }}</label>
       <input type="text" class="form-control" formControlName="name" />
     </div>
 
     <div class="mb-3">
-      <label>Email</label>
-      <input type="email" class="form-control" formControlName="email" />
-    </div>
-
-    <div class="mb-3">
-      <label>Nyelv</label>
-      <select class="form-select" formControlName="language">
-        <option value="hu">Magyar</option>
-        <option value="en">English</option>
-      </select>
+      <label>{{ loc.get(12, "The child family name.") }}</label>
+      <input type="text" class="form-control" formControlName="familyName" />
     </div>
   </form>
+  <div class="mb-3">
+    <button class="btn btn-primary" (click)="openChangePasswordModal()">
+      {{ loc.get(24, "Change password") }}
+    </button>
+  </div>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-secondary" (click)="close()">Mégse</button>
-  <button class="btn btn-primary" (click)="save()">Mentés</button>
+  <button class="btn btn-secondary" (click)="close()">
+    {{ loc.get(26, "Cancel") }}
+  </button>
+  <button class="btn btn-primary" (click)="save()">
+    {{ loc.get(25, "Save") }}
+  </button>
 </div>

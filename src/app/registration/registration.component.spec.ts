@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RegistrationComponent } from './registration.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -14,15 +13,11 @@ describe('RegistrationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RegistrationComponent, // 👈 standalone componentként importáljuk
+        RegistrationComponent, // Standalone component
         HttpClientTestingModule,
         ReactiveFormsModule,
       ],
-      providers: [
-        NgbActiveModal, // 👈 EZ HIÁNYZOTT!
-        AuthService, // ha kell
-        LocalizationService, // ha kell
-      ],
+      providers: [NgbActiveModal, AuthService, LocalizationService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegistrationComponent);
@@ -69,12 +64,17 @@ describe('RegistrationComponent', () => {
       }),
     } as any);
 
+    component.isPairRegistration = false;
+
     component.emailController.setValue('test@example.com');
     component.userNameController.setValue('testuser');
     component.familyNameController.setValue('TestFamily');
     component.passwordController.setValue('secret123');
     component.confirmPasswordController.setValue('secret123');
+    component.pairEmailController.setValue('dummy@example.com');
+    component.pairNameController.setValue('PairName');
 
+    component.registrationForm.updateValueAndValidity();
     component.OnRegist();
 
     expect(registerSpy).toHaveBeenCalled();
@@ -88,11 +88,15 @@ describe('RegistrationComponent', () => {
       }),
     } as any);
 
+    component.isPairRegistration = false;
+
     component.emailController.setValue('test@example.com');
     component.userNameController.setValue('testuser');
     component.familyNameController.setValue('TestFamily');
     component.passwordController.setValue('secret123');
     component.confirmPasswordController.setValue('secret123');
+    component.pairEmailController.setValue('dummy@example.com');
+    component.pairNameController.setValue('dummy');
 
     component.OnRegist();
 
@@ -102,128 +106,116 @@ describe('RegistrationComponent', () => {
   });
 
   it('should close modal on successful registration', () => {
-    const modalSpy = spyOn(component['modal'], 'close');
+    const modal = TestBed.inject(NgbActiveModal);
+    const modalSpy = spyOn(modal, 'close');
 
     spyOn(component['client'], 'register').and.returnValue({
       pipe: () => ({
-        subscribe: (cb: (res: any) => void) => cb({ error: null }), // nincs hiba
+        subscribe: (cb: (res: any) => void) => cb({ error: null }),
       }),
     } as any);
+
+    component.isPairRegistration = false;
 
     component.emailController.setValue('test@example.com');
     component.userNameController.setValue('testuser');
     component.familyNameController.setValue('TestFamily');
     component.passwordController.setValue('secret123');
     component.confirmPasswordController.setValue('secret123');
+    component.pairEmailController.setValue('dummy@example.com');
+    component.pairNameController.setValue('dummy');
 
     component.OnRegist();
 
     expect(modalSpy).toHaveBeenCalled();
   });
-});
 
-describe('Pair registration mode', () => {
-  let component: RegistrationComponent;
-  let fixture: ComponentFixture<RegistrationComponent>;
+  describe('Pair registration mode', () => {
+    beforeEach(() => {
+      fixture = TestBed.createComponent(RegistrationComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        RegistrationComponent, // 👈 standalone componentként importáljuk
-        HttpClientTestingModule,
-        ReactiveFormsModule,
-      ],
-      providers: [
-        NgbActiveModal, // 👈 EZ HIÁNYZOTT!
-        AuthService, // ha kell
-        LocalizationService, // ha kell
-      ],
-    }).compileComponents();
+    it('should show pair fields when isPairRegistration is true', () => {
+      component.isPairRegistration = true;
+      fixture.detectChanges();
 
-    fixture = TestBed.createComponent(RegistrationComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('[data-testid="pairEmail"]')).toBeTruthy();
+      expect(compiled.querySelector('[data-testid="pairName"]')).toBeTruthy();
+    });
 
-  it('should show pair fields when isPairRegistration is true', () => {
-    component.isPairRegistration = true;
-    fixture.detectChanges();
+    it('should hide pair fields when isPairRegistration is false', () => {
+      component.isPairRegistration = false;
+      fixture.detectChanges();
 
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('[data-testid="pairEmail"]')).toBeTruthy();
-    expect(compiled.querySelector('[data-testid="pairName"]')).toBeTruthy();
-  });
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('[data-testid="pairEmail"]')).toBeFalsy();
+      expect(compiled.querySelector('[data-testid="pairName"]')).toBeFalsy();
+    });
 
-  it('should hide pair fields when isPairRegistration is false', () => {
-    component.isPairRegistration = false;
-    fixture.detectChanges();
+    it('should call registerWithPair when isPairRegistration is true and form is valid', () => {
+      component.isPairRegistration = true;
 
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('[data-testid="pairEmail"]')).toBeFalsy();
-    expect(compiled.querySelector('[data-testid="pairName"]')).toBeFalsy();
-  });
+      spyOn(component['client'], 'registerWithPair').and.returnValue({
+        pipe: () => ({
+          subscribe: () => {},
+        }),
+      } as any);
 
-  it('should call registerWithPair when isPairRegistration is true and form is valid', () => {
-    component.isPairRegistration = true;
+      component.emailController.setValue('test@example.com');
+      component.userNameController.setValue('testuser');
+      component.familyNameController.setValue('TestFamily');
+      component.passwordController.setValue('secret123');
+      component.confirmPasswordController.setValue('secret123');
+      component.pairEmailController.setValue('pair@example.com');
+      component.pairNameController.setValue('PairName');
 
-    spyOn(component['client'], 'registerWithPair').and.returnValue({
-      pipe: () => ({
-        subscribe: () => {},
-      }),
-    } as any);
+      component.OnRegist();
 
-    component.emailController.setValue('test@example.com');
-    component.userNameController.setValue('testuser');
-    component.familyNameController.setValue('TestFamily');
-    component.passwordController.setValue('secret123');
-    component.confirmPasswordController.setValue('secret123');
-    component.pairEmailController.setValue('pair@example.com');
-    component.pairNameController.setValue('PairName');
+      expect(component['client'].registerWithPair).toHaveBeenCalled();
+    });
 
-    component.OnRegist();
+    it('should not call registerWithPair when isPairRegistration is true but pair fields are empty', () => {
+      component.isPairRegistration = true;
 
-    expect(component['client'].registerWithPair).toHaveBeenCalled();
-  });
+      const spy = spyOn(
+        component['client'],
+        'registerWithPair'
+      ).and.returnValue({
+        pipe: () => ({
+          subscribe: () => {},
+        }),
+      } as any);
 
-  it('should not call registerWithPair when isPairRegistration is true but pair fields are empty', () => {
-    component.isPairRegistration = true;
+      component.emailController.setValue('test@example.com');
+      component.userNameController.setValue('testuser');
+      component.familyNameController.setValue('TestFamily');
+      component.passwordController.setValue('secret123');
+      component.confirmPasswordController.setValue('secret123');
+      component.pairEmailController.setValue('');
+      component.pairNameController.setValue('');
 
-    const spy = spyOn(component['client'], 'registerWithPair').and.returnValue({
-      pipe: () => ({
-        subscribe: () => {},
-      }),
-    } as any);
+      component.OnRegist();
 
-    component.emailController.setValue('test@example.com');
-    component.userNameController.setValue('testuser');
-    component.familyNameController.setValue('TestFamily');
-    component.passwordController.setValue('secret123');
-    component.confirmPasswordController.setValue('secret123');
-    component.pairEmailController.setValue('');
-    component.pairNameController.setValue('');
+      expect(spy).not.toHaveBeenCalled();
+    });
 
-    component.OnRegist();
+    it('should require pairEmail only when isPairRegistration is true', () => {
+      component.isPairRegistration = false;
+      component.pairEmailController.setValue('');
+      component.pairEmailController.updateValueAndValidity();
+      expect(component.pairEmailController.valid).toBeTrue();
 
-    expect(spy).not.toHaveBeenCalled();
-  });
+      component.isPairRegistration = true;
+      component.pairEmailController.setValue('');
+      component.pairEmailController.updateValueAndValidity();
+      expect(component.pairEmailController.valid).toBeFalse();
 
-  it('should require pairEmail only when isPairRegistration is true', () => {
-    // 1. Alaphelyzet: nincs páros regisztráció
-    component.isPairRegistration = false;
-    component.pairEmailController.setValue('');
-    component.pairEmailController.updateValueAndValidity();
-
-    expect(component.pairEmailController.valid).toBeTrue();
-
-    component.isPairRegistration = true;
-    component.pairEmailController.setValue('');
-    component.pairEmailController.updateValueAndValidity();
-
-    expect(component.pairEmailController.valid).toBeFalse();
-
-    component.pairEmailController.setValue('pair@example.com');
-    component.pairEmailController.updateValueAndValidity();
-
-    expect(component.pairEmailController.valid).toBeTrue();
+      component.pairEmailController.setValue('pair@example.com');
+      component.pairEmailController.updateValueAndValidity();
+      expect(component.pairEmailController.valid).toBeTrue();
+    });
   });
 });

@@ -23,6 +23,13 @@ import { LoginOrRegisterComponentComponent } from '../login-or-register-componen
 export class TopMenuComponent {
   isOpen = false;
 
+  selectedLang = 'hu'; // vagy olvasd ki a LocalizationService-ből
+
+  changeLang(lang: 'hu' | 'en') {
+    this.selectedLang = lang;
+    this.loc.loadLocalizations(lang); // vagy hasonló metódus
+  }
+
   toggleMenu() {
     this.isOpen = !this.isOpen;
   }

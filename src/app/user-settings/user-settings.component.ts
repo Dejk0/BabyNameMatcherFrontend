@@ -6,7 +6,11 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LocPipe } from '../pipes/loc.pipe';
+import { LocalizationService } from '../services/localization.service';
+import { ChangepasswordComponent } from '../changepassword/changepassword.component';
+import { AuthService } from '../auth/auth.module';
 
 @Component({
   selector: 'app-user-settings',
@@ -14,27 +18,42 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   imports: [CommonModule, ReactiveFormsModule],
 })
 export class UserSettingsComponent implements OnInit {
+  public nameController = new FormControl('', [Validators.required]);
+  public famolyNameController = new FormControl('', [Validators.required]);
+
   settingsForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    language: new FormControl('hu'),
+    name: this.nameController,
+    familyName: this.famolyNameController,
   });
 
-  constructor(public activeModal: NgbActiveModal) {}
+  constructor(
+    public activeModal: NgbActiveModal,
+    private modalService: NgbModal,
+    public loc: LocalizationService,
+    private auth: AuthService
+  ) {}
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.nameController.setValue(
+      this.auth?.username ? this.auth?.username : ''
+    );
   }
 
   save() {
     if (this.settingsForm.valid) {
       const settings = this.settingsForm.value;
-      console.log('Mentett beállítások:', settings);
-      this.activeModal.close(settings); // visszaküldheted a módosított adatokat
+      this.activeModal.close(settings);
     }
   }
 
+  openChangePasswordModal() {
+    this.modalService.open(ChangepasswordComponent, {
+      size: 'md',
+      backdrop: 'static',
+    });
+  }
+
   close() {
-    this.activeModal.dismiss(); // bezárás mentés nélkül
+    this.activeModal.dismiss();
   }
 }
