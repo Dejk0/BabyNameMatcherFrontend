@@ -36,7 +36,7 @@
     </li>
     <li class="nav-item d-flex gap-2" *ngIf="auth.isLoggedIn">
       <button class="btn btn-outline-primary" (click)="openUserSettingsModal()">
-        {{ auth.username }}
+        {{ auth.username | async }}
       </button>
       <button class="btn btn-outline-danger" (click)="onLogout()">
         {{ loc.get(2, "Logout") }}

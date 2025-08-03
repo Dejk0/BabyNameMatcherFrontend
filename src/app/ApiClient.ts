@@ -312,7 +312,7 @@ export class ApiClient {
     /**
      * @return OK
      */
-    logout(): Observable<string> {
+    logout(): Observable<BaseValidResponse> {
         let url_ = this.baseUrl + "/api/Auth/logout";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -331,14 +331,14 @@ export class ApiClient {
                 try {
                     return this.processLogout(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<string>;
+                    return _observableThrow(e) as any as Observable<BaseValidResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<string>;
+                return _observableThrow(response_) as any as Observable<BaseValidResponse>;
         }));
     }
 
-    protected processLogout(response: HttpResponseBase): Observable<string> {
+    protected processLogout(response: HttpResponseBase): Observable<BaseValidResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -349,8 +349,221 @@ export class ApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
+            result200 = BaseValidResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getFamilyname(): Observable<GetFamilyNameResult> {
+        let url_ = this.baseUrl + "/api/Auth/get-familyname";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetFamilyname(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetFamilyname(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetFamilyNameResult>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetFamilyNameResult>;
+        }));
+    }
+
+    protected processGetFamilyname(response: HttpResponseBase): Observable<GetFamilyNameResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetFamilyNameResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    changeFamilyname(body: ChangeNameParams | undefined): Observable<BaseValidResponse> {
+        let url_ = this.baseUrl + "/api/Auth/change-familyname";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeFamilyname(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeFamilyname(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BaseValidResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BaseValidResponse>;
+        }));
+    }
+
+    protected processChangeFamilyname(response: HttpResponseBase): Observable<BaseValidResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = BaseValidResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    changeUsername(body: ChangeNameParams | undefined): Observable<BaseValidResponse> {
+        let url_ = this.baseUrl + "/api/Auth/change-username";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeUsername(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeUsername(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BaseValidResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BaseValidResponse>;
+        }));
+    }
+
+    protected processChangeUsername(response: HttpResponseBase): Observable<BaseValidResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = BaseValidResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    sendingNewToken(): Observable<TokenResponse> {
+        let url_ = this.baseUrl + "/api/Auth/sending-new-token";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSendingNewToken(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSendingNewToken(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<TokenResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<TokenResponse>;
+        }));
+    }
+
+    protected processSendingNewToken(response: HttpResponseBase): Observable<TokenResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TokenResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -466,6 +679,42 @@ export interface IBaseValidResponse {
     message?: string[] | undefined;
 }
 
+export class ChangeNameParams implements IChangeNameParams {
+    newName?: string | undefined;
+
+    constructor(data?: IChangeNameParams) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.newName = _data["newName"];
+        }
+    }
+
+    static fromJS(data: any): ChangeNameParams {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChangeNameParams();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newName"] = this.newName;
+        return data;
+    }
+}
+
+export interface IChangeNameParams {
+    newName?: string | undefined;
+}
+
 export class ChangePasswordParamsDto implements IChangePasswordParamsDto {
     currentPassword?: string | undefined;
     newPassword?: string | undefined;
@@ -504,6 +753,58 @@ export class ChangePasswordParamsDto implements IChangePasswordParamsDto {
 export interface IChangePasswordParamsDto {
     currentPassword?: string | undefined;
     newPassword?: string | undefined;
+}
+
+export class GetFamilyNameResult implements IGetFamilyNameResult {
+    isValid?: boolean;
+    message?: string[] | undefined;
+    familyName?: string | undefined;
+
+    constructor(data?: IGetFamilyNameResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isValid = _data["isValid"];
+            if (Array.isArray(_data["message"])) {
+                this.message = [] as any;
+                for (let item of _data["message"])
+                    this.message!.push(item);
+            }
+            this.familyName = _data["familyName"];
+        }
+    }
+
+    static fromJS(data: any): GetFamilyNameResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetFamilyNameResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isValid"] = this.isValid;
+        if (Array.isArray(this.message)) {
+            data["message"] = [];
+            for (let item of this.message)
+                data["message"].push(item);
+        }
+        data["familyName"] = this.familyName;
+        return data;
+    }
+}
+
+export interface IGetFamilyNameResult {
+    isValid?: boolean;
+    message?: string[] | undefined;
+    familyName?: string | undefined;
 }
 
 export class LocalizationParamsDto implements ILocalizationParamsDto {
@@ -879,6 +1180,8 @@ export interface IRegistrWithPairResultDto {
 }
 
 export class TokenResponse implements ITokenResponse {
+    isValid?: boolean;
+    message?: string[] | undefined;
     token?: string | undefined;
 
     constructor(data?: ITokenResponse) {
@@ -892,6 +1195,12 @@ export class TokenResponse implements ITokenResponse {
 
     init(_data?: any) {
         if (_data) {
+            this.isValid = _data["isValid"];
+            if (Array.isArray(_data["message"])) {
+                this.message = [] as any;
+                for (let item of _data["message"])
+                    this.message!.push(item);
+            }
             this.token = _data["token"];
         }
     }
@@ -905,12 +1214,20 @@ export class TokenResponse implements ITokenResponse {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["isValid"] = this.isValid;
+        if (Array.isArray(this.message)) {
+            data["message"] = [];
+            for (let item of this.message)
+                data["message"].push(item);
+        }
         data["token"] = this.token;
         return data;
     }
 }
 
 export interface ITokenResponse {
+    isValid?: boolean;
+    message?: string[] | undefined;
     token?: string | undefined;
 }
 

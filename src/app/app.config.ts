@@ -1,5 +1,9 @@
 // app.config.ts
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideZoneChangeDetection,
+  isDevMode,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import {
@@ -10,6 +14,8 @@ import {
 import { AuthInterceptor } from './auth/interceptor';
 import { ApiClient, API_BASE_URL } from './ApiClient';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { provideRouterStore } from '@ngrx/router-store';
 
 export const appConfig: ApplicationConfig = {
   providers: [

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiClient, LoginParamsDto, TokenResponse } from '../ApiClient';
 import { jwtDecode } from 'jwt-decode'; // ✅ Ez működik ESM alatt
 
@@ -15,8 +15,8 @@ interface TokenPayload {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly TOKEN_KEY = 'access_token';
-  public username?: string;
+  public readonly TOKEN_KEY = 'access_token';
+  public username: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(private client: ApiClient) {}
 
@@ -27,7 +27,10 @@ export class AuthService {
           localStorage.setItem(this.TOKEN_KEY, response.token);
 
           const decoded = jwtDecode<TokenPayload>(response.token);
-          this.username = decoded.name ?? decoded.username;
+          const username = decoded.name ?? decoded.username;
+          if (username) {
+            this.username?.next(username);
+          }
         }
       })
     );
@@ -37,11 +40,17 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
   }
 
+  getUserName() {
+    return this.username?.value;
+  }
+
   get token(): string | null {
     const token = localStorage.getItem(this.TOKEN_KEY);
     if (token) {
       const decoded = jwtDecode<TokenPayload>(token);
-      this.username = decoded.username;
+      if (decoded.username) {
+        this.username?.next(decoded.username);
+      }
     }
 
     return localStorage.getItem(this.TOKEN_KEY);
@@ -49,5 +58,34 @@ export class AuthService {
 
   get isLoggedIn(): boolean {
     return !!this.token;
+  }
+
+  isTokenExpired(token: string): boolean {
+    try {
+      const decoded: any = jwtDecode(token);
+      const now = Date.now().valueOf() / 1000;
+      return decoded.exp < now;
+    } catch (e) {
+      return true;
+    }
+  }
+
+  refreshToken(): Observable<string> {
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    if (!token) return new Observable((observer) => observer.error('No token'));
+
+    return this.client.sendingNewToken().pipe(
+      tap((response: TokenResponse) => {
+        if (response.token) {
+          localStorage.setItem(this.TOKEN_KEY, response.token);
+          const decoded = jwtDecode<TokenPayload>(response.token);
+          const username = decoded.name ?? decoded.username;
+          if (username) {
+            this.username.next(username);
+          }
+        }
+      }),
+      map((res: TokenResponse) => (res.token ? res.token : ''))
+    );
   }
 }
