@@ -25,13 +25,23 @@
       {{ loc.get(24, "Change password") }}
     </button>
   </div>
-</div>
+  <div class="mb-3">
+    <button class="btn btn-primary" (click)="openSelectedNamesModal()">
+      {{ loc.get(34, "Selected names") }}
+    </button>
+  </div>
+  <div class="mb-3">
+    <button class="btn btn-primary" (click)="openThrowedNamesModal()">
+      {{ loc.get(35, "Throwed names") }}
+    </button>
+  </div>
 
-<div class="modal-footer">
-  <button class="btn btn-secondary" (click)="close()">
-    {{ loc.get(26, "Cancel") }}
-  </button>
-  <button class="btn btn-primary" (click)="save()">
-    {{ loc.get(25, "Save") }}
-  </button>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="close()">
+      {{ loc.get(26, "Cancel") }}
+    </button>
+    <button class="btn btn-primary" (click)="save()">
+      {{ loc.get(25, "Save") }}
+    </button>
+  </div>
 </div>

@@ -1,0 +1,28 @@
+.button {
+  background-color: #ffffffcc;
+  border-radius: 16px;
+  padding: 0.3rem 0.6rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.name {
+  color: #4a4a4a;
+  font-size: 17px;
+}
+
+.boy {
+  background-color: #a2d2ff;
+}
+
+.girl {
+  background-color: #ffc8dd;
+}
+
+:host ::ng-deep .button:hover {
+  transform: translateY(-5px) scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  display: block;
+}

@@ -15,6 +15,7 @@ import { ApiClient, ChangeNameParams, GetFamilyNameResult } from '../ApiClient';
 import { map, Observable, of, Subject, take, takeUntil, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { jwtDecode } from 'jwt-decode';
+import { NamesListComponent } from '../names-list/names-list.component';
 
 @Component({
   selector: 'app-user-settings',
@@ -104,7 +105,25 @@ export class UserSettingsComponent implements OnInit {
     this.modalService.open(ChangepasswordComponent, {
       size: 'md',
       backdrop: 'static',
+      centered: true,
     });
+  }
+
+  openSelectedNamesModal() {
+    this.modalService.open(NamesListComponent, {
+      size: 'md',
+      backdrop: 'static',
+      centered: true,
+    });
+  }
+
+  openThrowedNamesModal() {
+    const ref = this.modalService.open(NamesListComponent, {
+      size: 'md',
+      backdrop: 'static',
+      centered: true,
+    });
+    ref.componentInstance.isThrowedNames = true;
   }
 
   close() {

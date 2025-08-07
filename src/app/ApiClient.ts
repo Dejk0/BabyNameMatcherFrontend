@@ -922,7 +922,7 @@ export class ApiClient {
     /**
      * @return OK
      */
-    getSelectedNames(): Observable<NameSelection[]> {
+    getSelectedNames(): Observable<HunNames[]> {
         let url_ = this.baseUrl + "/api/NameSelection/GetSelectedNames";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -934,21 +934,21 @@ export class ApiClient {
             })
         };
 
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
             return this.processGetSelectedNames(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
                     return this.processGetSelectedNames(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<NameSelection[]>;
+                    return _observableThrow(e) as any as Observable<HunNames[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<NameSelection[]>;
+                return _observableThrow(response_) as any as Observable<HunNames[]>;
         }));
     }
 
-    protected processGetSelectedNames(response: HttpResponseBase): Observable<NameSelection[]> {
+    protected processGetSelectedNames(response: HttpResponseBase): Observable<HunNames[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -962,7 +962,7 @@ export class ApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(NameSelection.fromJS(item));
+                    result200!.push(HunNames.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -980,7 +980,7 @@ export class ApiClient {
     /**
      * @return OK
      */
-    getThrowedNames(): Observable<NameSelection[]> {
+    getThrowedNames(): Observable<HunNames[]> {
         let url_ = this.baseUrl + "/api/NameSelection/GetThrowedNames";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -992,21 +992,21 @@ export class ApiClient {
             })
         };
 
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
             return this.processGetThrowedNames(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
                     return this.processGetThrowedNames(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<NameSelection[]>;
+                    return _observableThrow(e) as any as Observable<HunNames[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<NameSelection[]>;
+                return _observableThrow(response_) as any as Observable<HunNames[]>;
         }));
     }
 
-    protected processGetThrowedNames(response: HttpResponseBase): Observable<NameSelection[]> {
+    protected processGetThrowedNames(response: HttpResponseBase): Observable<HunNames[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1020,7 +1020,7 @@ export class ApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(NameSelection.fromJS(item));
+                    result200!.push(HunNames.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1034,118 +1034,62 @@ export class ApiClient {
         }
         return _observableOf(null as any);
     }
-}
 
-export class BabyNameMatcherUser implements IBabyNameMatcherUser {
-    id?: string | undefined;
-    userName?: string | undefined;
-    normalizedUserName?: string | undefined;
-    email?: string | undefined;
-    normalizedEmail?: string | undefined;
-    emailConfirmed?: boolean;
-    passwordHash?: string | undefined;
-    securityStamp?: string | undefined;
-    concurrencyStamp?: string | undefined;
-    phoneNumber?: string | undefined;
-    phoneNumberConfirmed?: boolean;
-    twoFactorEnabled?: boolean;
-    lockoutEnd?: Date | undefined;
-    lockoutEnabled?: boolean;
-    accessFailedCount?: number;
-    selectedFamilyName?: string | undefined;
-    pairId?: string | undefined;
-    nameSelections?: NameSelection[] | undefined;
+    /**
+     * @param id (optional) 
+     * @return OK
+     */
+    changeSelectedName(id: number | undefined): Observable<BaseValidResponse> {
+        let url_ = this.baseUrl + "/api/NameSelection/ChangeSelectedName?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
 
-    constructor(data?: IBabyNameMatcherUser) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeSelectedName(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeSelectedName(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BaseValidResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BaseValidResponse>;
+        }));
+    }
+
+    protected processChangeSelectedName(response: HttpResponseBase): Observable<BaseValidResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = BaseValidResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
         }
+        return _observableOf(null as any);
     }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.userName = _data["userName"];
-            this.normalizedUserName = _data["normalizedUserName"];
-            this.email = _data["email"];
-            this.normalizedEmail = _data["normalizedEmail"];
-            this.emailConfirmed = _data["emailConfirmed"];
-            this.passwordHash = _data["passwordHash"];
-            this.securityStamp = _data["securityStamp"];
-            this.concurrencyStamp = _data["concurrencyStamp"];
-            this.phoneNumber = _data["phoneNumber"];
-            this.phoneNumberConfirmed = _data["phoneNumberConfirmed"];
-            this.twoFactorEnabled = _data["twoFactorEnabled"];
-            this.lockoutEnd = _data["lockoutEnd"] ? new Date(_data["lockoutEnd"].toString()) : <any>undefined;
-            this.lockoutEnabled = _data["lockoutEnabled"];
-            this.accessFailedCount = _data["accessFailedCount"];
-            this.selectedFamilyName = _data["selectedFamilyName"];
-            this.pairId = _data["pairId"];
-            if (Array.isArray(_data["nameSelections"])) {
-                this.nameSelections = [] as any;
-                for (let item of _data["nameSelections"])
-                    this.nameSelections!.push(NameSelection.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): BabyNameMatcherUser {
-        data = typeof data === 'object' ? data : {};
-        let result = new BabyNameMatcherUser();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["userName"] = this.userName;
-        data["normalizedUserName"] = this.normalizedUserName;
-        data["email"] = this.email;
-        data["normalizedEmail"] = this.normalizedEmail;
-        data["emailConfirmed"] = this.emailConfirmed;
-        data["passwordHash"] = this.passwordHash;
-        data["securityStamp"] = this.securityStamp;
-        data["concurrencyStamp"] = this.concurrencyStamp;
-        data["phoneNumber"] = this.phoneNumber;
-        data["phoneNumberConfirmed"] = this.phoneNumberConfirmed;
-        data["twoFactorEnabled"] = this.twoFactorEnabled;
-        data["lockoutEnd"] = this.lockoutEnd ? this.lockoutEnd.toISOString() : <any>undefined;
-        data["lockoutEnabled"] = this.lockoutEnabled;
-        data["accessFailedCount"] = this.accessFailedCount;
-        data["selectedFamilyName"] = this.selectedFamilyName;
-        data["pairId"] = this.pairId;
-        if (Array.isArray(this.nameSelections)) {
-            data["nameSelections"] = [];
-            for (let item of this.nameSelections)
-                data["nameSelections"].push(item ? item.toJSON() : <any>undefined);
-        }
-        return data;
-    }
-}
-
-export interface IBabyNameMatcherUser {
-    id?: string | undefined;
-    userName?: string | undefined;
-    normalizedUserName?: string | undefined;
-    email?: string | undefined;
-    normalizedEmail?: string | undefined;
-    emailConfirmed?: boolean;
-    passwordHash?: string | undefined;
-    securityStamp?: string | undefined;
-    concurrencyStamp?: string | undefined;
-    phoneNumber?: string | undefined;
-    phoneNumberConfirmed?: boolean;
-    twoFactorEnabled?: boolean;
-    lockoutEnd?: Date | undefined;
-    lockoutEnabled?: boolean;
-    accessFailedCount?: number;
-    selectedFamilyName?: string | undefined;
-    pairId?: string | undefined;
-    nameSelections?: NameSelection[] | undefined;
 }
 
 export class BaseValidResponse implements IBaseValidResponse {
@@ -1502,66 +1446,6 @@ export class LoginParamsDto implements ILoginParamsDto {
 export interface ILoginParamsDto {
     email?: string | undefined;
     password?: string | undefined;
-}
-
-export class NameSelection implements INameSelection {
-    nameSelectionId?: string;
-    nameId?: number;
-    userId?: string | undefined;
-    user?: BabyNameMatcherUser;
-    isSelected?: boolean;
-    createdAt?: Date;
-    holdingTime?: string;
-
-    constructor(data?: INameSelection) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.nameSelectionId = _data["nameSelectionId"];
-            this.nameId = _data["nameId"];
-            this.userId = _data["userId"];
-            this.user = _data["user"] ? BabyNameMatcherUser.fromJS(_data["user"]) : <any>undefined;
-            this.isSelected = _data["isSelected"];
-            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
-            this.holdingTime = _data["holdingTime"];
-        }
-    }
-
-    static fromJS(data: any): NameSelection {
-        data = typeof data === 'object' ? data : {};
-        let result = new NameSelection();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["nameSelectionId"] = this.nameSelectionId;
-        data["nameId"] = this.nameId;
-        data["userId"] = this.userId;
-        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
-        data["isSelected"] = this.isSelected;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
-        data["holdingTime"] = this.holdingTime;
-        return data;
-    }
-}
-
-export interface INameSelection {
-    nameSelectionId?: string;
-    nameId?: number;
-    userId?: string | undefined;
-    user?: BabyNameMatcherUser;
-    isSelected?: boolean;
-    createdAt?: Date;
-    holdingTime?: string;
 }
 
 export class NameSelectionFilterConditions implements INameSelectionFilterConditions {

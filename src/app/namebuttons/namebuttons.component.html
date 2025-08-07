@@ -1,0 +1,11 @@
+<div
+  class="button"
+  (click)="onClicked()"
+  [ngClass]="{
+    girl: gender === 'F',
+    boy: gender === 'M',
+    neutral: gender !== 'F' && gender !== 'M'
+  }"
+>
+  <h2 class="name">{{ name }}</h2>
+</div>

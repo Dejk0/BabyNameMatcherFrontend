@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h4 class="modal-title">
+    {{
+      this.isThrowedNames
+        ? loc.get(35, "Throwed names")
+        : loc.get(34, "Selected names")
+    }}
+  </h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Bezárás"
+    (click)="close()"
+  ></button>
+</div>
+<div class="name-grid">
+  <app-namebuttons
+    *ngFor="let item of names; let i = index"
+    [name]="item?.name ? item?.name : ''"
+    [familyName]="'Deák'"
+    [gender]="item?.gender ? item?.gender : ''"
+    (clicked)="onClick(item)"
+  ></app-namebuttons>
+</div>

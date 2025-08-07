@@ -51,6 +51,7 @@ export class TopMenuComponent {
     this.modalService.open(UserSettingsComponent, {
       size: 'md',
       backdrop: 'static',
+      centered: true,
     });
   }
 
