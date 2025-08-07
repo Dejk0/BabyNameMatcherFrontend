@@ -50,6 +50,15 @@ button:hover {
 .scroll-content {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
   position: relative;
   will-change: transform;
+  max-width: 300px;
+}
+
+.draggable-wrapper {
+  width: 280px; /* vagy amekkora a name-card */
+  margin: 0 auto; /* középre igazítás */
+  display: block; /* vagy inline-block */
 }

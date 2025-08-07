@@ -629,6 +629,523 @@ export class ApiClient {
         }
         return _observableOf(null as any);
     }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    createSelectsName(body: SelectNameParams | undefined): Observable<BaseValidResponse> {
+        let url_ = this.baseUrl + "/api/NameSelection/CreateSelectsName";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateSelectsName(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateSelectsName(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BaseValidResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BaseValidResponse>;
+        }));
+    }
+
+    protected processCreateSelectsName(response: HttpResponseBase): Observable<BaseValidResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = BaseValidResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    createThrowedName(body: SelectNameParams | undefined): Observable<BaseValidResponse> {
+        let url_ = this.baseUrl + "/api/NameSelection/CreateThrowedName";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateThrowedName(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateThrowedName(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BaseValidResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BaseValidResponse>;
+        }));
+    }
+
+    protected processCreateThrowedName(response: HttpResponseBase): Observable<BaseValidResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = BaseValidResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    getName(body: NameSelectionFilterConditions | undefined): Observable<HunNames> {
+        let url_ = this.baseUrl + "/api/NameSelection/GetName";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetName(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetName(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<HunNames>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<HunNames>;
+        }));
+    }
+
+    protected processGetName(response: HttpResponseBase): Observable<HunNames> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = HunNames.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    getRandomName(body: NameSelectionFilterConditions | undefined): Observable<HunNames[]> {
+        let url_ = this.baseUrl + "/api/NameSelection/GetRandomName";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetRandomName(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetRandomName(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<HunNames[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<HunNames[]>;
+        }));
+    }
+
+    protected processGetRandomName(response: HttpResponseBase): Observable<HunNames[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(HunNames.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getRandomNames(): Observable<HunNames[]> {
+        let url_ = this.baseUrl + "/api/NameSelection/GetRandomNames";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetRandomNames(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetRandomNames(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<HunNames[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<HunNames[]>;
+        }));
+    }
+
+    protected processGetRandomNames(response: HttpResponseBase): Observable<HunNames[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(HunNames.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getSelectedNames(): Observable<NameSelection[]> {
+        let url_ = this.baseUrl + "/api/NameSelection/GetSelectedNames";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSelectedNames(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSelectedNames(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<NameSelection[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<NameSelection[]>;
+        }));
+    }
+
+    protected processGetSelectedNames(response: HttpResponseBase): Observable<NameSelection[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(NameSelection.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getThrowedNames(): Observable<NameSelection[]> {
+        let url_ = this.baseUrl + "/api/NameSelection/GetThrowedNames";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetThrowedNames(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetThrowedNames(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<NameSelection[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<NameSelection[]>;
+        }));
+    }
+
+    protected processGetThrowedNames(response: HttpResponseBase): Observable<NameSelection[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(NameSelection.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export class BabyNameMatcherUser implements IBabyNameMatcherUser {
+    id?: string | undefined;
+    userName?: string | undefined;
+    normalizedUserName?: string | undefined;
+    email?: string | undefined;
+    normalizedEmail?: string | undefined;
+    emailConfirmed?: boolean;
+    passwordHash?: string | undefined;
+    securityStamp?: string | undefined;
+    concurrencyStamp?: string | undefined;
+    phoneNumber?: string | undefined;
+    phoneNumberConfirmed?: boolean;
+    twoFactorEnabled?: boolean;
+    lockoutEnd?: Date | undefined;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
+    selectedFamilyName?: string | undefined;
+    pairId?: string | undefined;
+    nameSelections?: NameSelection[] | undefined;
+
+    constructor(data?: IBabyNameMatcherUser) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userName = _data["userName"];
+            this.normalizedUserName = _data["normalizedUserName"];
+            this.email = _data["email"];
+            this.normalizedEmail = _data["normalizedEmail"];
+            this.emailConfirmed = _data["emailConfirmed"];
+            this.passwordHash = _data["passwordHash"];
+            this.securityStamp = _data["securityStamp"];
+            this.concurrencyStamp = _data["concurrencyStamp"];
+            this.phoneNumber = _data["phoneNumber"];
+            this.phoneNumberConfirmed = _data["phoneNumberConfirmed"];
+            this.twoFactorEnabled = _data["twoFactorEnabled"];
+            this.lockoutEnd = _data["lockoutEnd"] ? new Date(_data["lockoutEnd"].toString()) : <any>undefined;
+            this.lockoutEnabled = _data["lockoutEnabled"];
+            this.accessFailedCount = _data["accessFailedCount"];
+            this.selectedFamilyName = _data["selectedFamilyName"];
+            this.pairId = _data["pairId"];
+            if (Array.isArray(_data["nameSelections"])) {
+                this.nameSelections = [] as any;
+                for (let item of _data["nameSelections"])
+                    this.nameSelections!.push(NameSelection.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): BabyNameMatcherUser {
+        data = typeof data === 'object' ? data : {};
+        let result = new BabyNameMatcherUser();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userName"] = this.userName;
+        data["normalizedUserName"] = this.normalizedUserName;
+        data["email"] = this.email;
+        data["normalizedEmail"] = this.normalizedEmail;
+        data["emailConfirmed"] = this.emailConfirmed;
+        data["passwordHash"] = this.passwordHash;
+        data["securityStamp"] = this.securityStamp;
+        data["concurrencyStamp"] = this.concurrencyStamp;
+        data["phoneNumber"] = this.phoneNumber;
+        data["phoneNumberConfirmed"] = this.phoneNumberConfirmed;
+        data["twoFactorEnabled"] = this.twoFactorEnabled;
+        data["lockoutEnd"] = this.lockoutEnd ? this.lockoutEnd.toISOString() : <any>undefined;
+        data["lockoutEnabled"] = this.lockoutEnabled;
+        data["accessFailedCount"] = this.accessFailedCount;
+        data["selectedFamilyName"] = this.selectedFamilyName;
+        data["pairId"] = this.pairId;
+        if (Array.isArray(this.nameSelections)) {
+            data["nameSelections"] = [];
+            for (let item of this.nameSelections)
+                data["nameSelections"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface IBabyNameMatcherUser {
+    id?: string | undefined;
+    userName?: string | undefined;
+    normalizedUserName?: string | undefined;
+    email?: string | undefined;
+    normalizedEmail?: string | undefined;
+    emailConfirmed?: boolean;
+    passwordHash?: string | undefined;
+    securityStamp?: string | undefined;
+    concurrencyStamp?: string | undefined;
+    phoneNumber?: string | undefined;
+    phoneNumberConfirmed?: boolean;
+    twoFactorEnabled?: boolean;
+    lockoutEnd?: Date | undefined;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
+    selectedFamilyName?: string | undefined;
+    pairId?: string | undefined;
+    nameSelections?: NameSelection[] | undefined;
 }
 
 export class BaseValidResponse implements IBaseValidResponse {
@@ -807,6 +1324,50 @@ export interface IGetFamilyNameResult {
     familyName?: string | undefined;
 }
 
+export class HunNames implements IHunNames {
+    id?: number;
+    name?: string | undefined;
+    gender?: string;
+
+    constructor(data?: IHunNames) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.gender = _data["gender"];
+        }
+    }
+
+    static fromJS(data: any): HunNames {
+        data = typeof data === 'object' ? data : {};
+        let result = new HunNames();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["gender"] = this.gender;
+        return data;
+    }
+}
+
+export interface IHunNames {
+    id?: number;
+    name?: string | undefined;
+    gender?: string;
+}
+
 export class LocalizationParamsDto implements ILocalizationParamsDto {
     languageCode?: string | undefined;
     key?: number[] | undefined;
@@ -941,6 +1502,118 @@ export class LoginParamsDto implements ILoginParamsDto {
 export interface ILoginParamsDto {
     email?: string | undefined;
     password?: string | undefined;
+}
+
+export class NameSelection implements INameSelection {
+    nameSelectionId?: string;
+    nameId?: number;
+    userId?: string | undefined;
+    user?: BabyNameMatcherUser;
+    isSelected?: boolean;
+    createdAt?: Date;
+    holdingTime?: string;
+
+    constructor(data?: INameSelection) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.nameSelectionId = _data["nameSelectionId"];
+            this.nameId = _data["nameId"];
+            this.userId = _data["userId"];
+            this.user = _data["user"] ? BabyNameMatcherUser.fromJS(_data["user"]) : <any>undefined;
+            this.isSelected = _data["isSelected"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.holdingTime = _data["holdingTime"];
+        }
+    }
+
+    static fromJS(data: any): NameSelection {
+        data = typeof data === 'object' ? data : {};
+        let result = new NameSelection();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["nameSelectionId"] = this.nameSelectionId;
+        data["nameId"] = this.nameId;
+        data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["isSelected"] = this.isSelected;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["holdingTime"] = this.holdingTime;
+        return data;
+    }
+}
+
+export interface INameSelection {
+    nameSelectionId?: string;
+    nameId?: number;
+    userId?: string | undefined;
+    user?: BabyNameMatcherUser;
+    isSelected?: boolean;
+    createdAt?: Date;
+    holdingTime?: string;
+}
+
+export class NameSelectionFilterConditions implements INameSelectionFilterConditions {
+    name?: string | undefined;
+    gender?: string | undefined;
+    startCharacter?: string | undefined;
+    quantity?: number;
+    userId?: string | undefined;
+
+    constructor(data?: INameSelectionFilterConditions) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.gender = _data["gender"];
+            this.startCharacter = _data["startCharacter"];
+            this.quantity = _data["quantity"];
+            this.userId = _data["userId"];
+        }
+    }
+
+    static fromJS(data: any): NameSelectionFilterConditions {
+        data = typeof data === 'object' ? data : {};
+        let result = new NameSelectionFilterConditions();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["gender"] = this.gender;
+        data["startCharacter"] = this.startCharacter;
+        data["quantity"] = this.quantity;
+        data["userId"] = this.userId;
+        return data;
+    }
+}
+
+export interface INameSelectionFilterConditions {
+    name?: string | undefined;
+    gender?: string | undefined;
+    startCharacter?: string | undefined;
+    quantity?: number;
+    userId?: string | undefined;
 }
 
 export class RegisterResultDto implements IRegisterResultDto {
@@ -1177,6 +1850,46 @@ export interface IRegistrWithPairResultDto {
     callbackUrl?: string | undefined;
     error?: string | undefined;
     pairCallbackUrl?: string | undefined;
+}
+
+export class SelectNameParams implements ISelectNameParams {
+    id?: number;
+    holdingTime?: string;
+
+    constructor(data?: ISelectNameParams) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.holdingTime = _data["holdingTime"];
+        }
+    }
+
+    static fromJS(data: any): SelectNameParams {
+        data = typeof data === 'object' ? data : {};
+        let result = new SelectNameParams();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["holdingTime"] = this.holdingTime;
+        return data;
+    }
+}
+
+export interface ISelectNameParams {
+    id?: number;
+    holdingTime?: string;
 }
 
 export class TokenResponse implements ITokenResponse {

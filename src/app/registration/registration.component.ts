@@ -91,15 +91,7 @@ export class RegistrationComponent {
     const pairEmail = this.pairEmailController.value;
     const pairName = this.pairNameController.value;
 
-    if (
-      !email ||
-      !password ||
-      !username ||
-      !familyname ||
-      !confirmPassword ||
-      !pairEmail ||
-      !pairName
-    ) {
+    if (!email || !password || !username || !familyname || !confirmPassword) {
       return;
     }
 

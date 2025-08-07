@@ -4,12 +4,19 @@
   <div class="scroll-container">
     <div class="scroll-content">
       <div
+        class="draggable-wrapper"
         *ngFor="let item of names; let i = index"
         cdkDrag
+        (cdkDragStarted)="onDragStart(i)"
+        (cdkDragEnded)="onDragEnd(i)"
         (cdkDragMoved)="onDragMoved($event, i)"
         (cdkDragReleased)="onDragReleased($event, i)"
       >
-        <app-name-card [name]="item.name"></app-name-card>
+        <app-name-card
+          [name]="item?.name ? item?.name : ''"
+          [familyName]="'Deák'"
+          [gender]="item?.gender ? item?.gender : ''"
+        ></app-name-card>
       </div>
     </div>
   </div>

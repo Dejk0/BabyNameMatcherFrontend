@@ -1,4 +1,11 @@
-<div class="card">
+<div
+  class="card"
+  [ngClass]="{
+    girl: gender === 'F',
+    boy: gender === 'M',
+    neutral: gender !== 'F' && gender !== 'M'
+  }"
+>
+  <h1 class="familyName">{{ familyName }}</h1>
   <h2 class="name">{{ name }}</h2>
-  <span class="gender">{{ gender }}</span>
 </div>
