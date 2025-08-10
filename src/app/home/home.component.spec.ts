@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
-import { ApiClient, HunNames } from '../ApiClient';
+import { ApiClient, NameSelectrionResultDto } from '../ApiClient';
 import { of } from 'rxjs';
 import {
   CdkDragMove,
@@ -38,9 +38,9 @@ describe('HomeComponent', () => {
   });
 
   it('should load names on init', () => {
-    const mockNames: HunNames[] = [
-      { id: 1, name: 'Anna' } as HunNames,
-      { id: 2, name: 'Béla' } as HunNames,
+    const mockNames: NameSelectrionResultDto[] = [
+      { id: 1, name: 'Anna' } as NameSelectrionResultDto,
+      { id: 2, name: 'Béla' } as NameSelectrionResultDto,
     ];
     apiClientMock.getRandomNames.and.returnValue(of(mockNames));
 
@@ -61,8 +61,8 @@ describe('HomeComponent', () => {
 
   it('should NOT delete item if dragged below threshold', () => {
     component.names = [
-      { id: 1, name: 'Anna' } as HunNames,
-      { id: 2, name: 'Béla' } as HunNames,
+      { id: 1, name: 'Anna' } as NameSelectrionResultDto,
+      { id: 2, name: 'Béla' } as NameSelectrionResultDto,
     ];
 
     const mockColumnWidth = 300;
@@ -96,8 +96,8 @@ describe('HomeComponent', () => {
 
   it('should delete item at index', () => {
     component.names = [
-      { id: 1, name: 'Anna' } as HunNames,
-      { id: 2, name: 'Béla' } as HunNames,
+      { id: 1, name: 'Anna' } as NameSelectrionResultDto,
+      { id: 2, name: 'Béla' } as NameSelectrionResultDto,
     ];
 
     component.deleteItem(0);

@@ -14,8 +14,7 @@ import {
 import { AuthInterceptor } from './auth/interceptor';
 import { ApiClient, API_BASE_URL } from './ApiClient';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { provideRouterStore } from '@ngrx/router-store';
+import { LangInterceptor } from './lang/lang.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,6 +26,7 @@ export const appConfig: ApplicationConfig = {
       useClass: AuthInterceptor,
       multi: true,
     },
+    { provide: HTTP_INTERCEPTORS, useClass: LangInterceptor, multi: true },
     ApiClient,
     {
       provide: API_BASE_URL,

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from '../login/login.component';
@@ -20,13 +20,15 @@ import { LoginOrRegisterComponentComponent } from '../login-or-register-componen
   templateUrl: './top-menu.component.html',
   styleUrl: './top-menu.component.css',
 })
-export class TopMenuComponent {
+export class TopMenuComponent implements OnInit {
   isOpen = false;
 
-  selectedLang = 'hu'; // vagy olvasd ki a LocalizationService-ből
+  selectedLang = 'en'; // vagy olvasd ki a LocalizationService-ből
 
   changeLang(lang: 'hu' | 'en') {
     this.selectedLang = lang;
+    document.documentElement.lang = lang;
+    localStorage.setItem('lang', lang);
     this.loc.loadLocalizations(lang); // vagy hasonló metódus
   }
 
@@ -39,6 +41,15 @@ export class TopMenuComponent {
     private modalService: NgbModal,
     public loc: LocalizationService
   ) {}
+  ngOnInit(): void {
+    const lang = localStorage.getItem('lang');
+    if (lang) {
+      this.loc.loadLocalizations(lang);
+      this.selectedLang = lang;
+    } else {
+      this.loc.loadLocalizations('en');
+    }
+  }
 
   openLoginModal() {
     this.modalService.open(LoginOrRegisterComponentComponent, {

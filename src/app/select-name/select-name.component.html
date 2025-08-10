@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ loc.get(46, "Selected name") }}</h4>
+  <button
+    type="button"
+    class="btn-close"
+    (click)="activeModal.dismiss()"
+  ></button>
+</div>
+
+<div class="modal-body">
+  <app-name-card
+    [name]="nameDto?.name || ''"
+    [familyName]="'Deák'"
+    [gender]="nameDto?.gender || ''"
+  >
+  </app-name-card>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" (click)="onThrow()">
+    {{ loc.get(47, "Throw away") }}
+  </button>
+  <button type="button" class="btn btn-primary" (click)="onChoose()">
+    {{ loc.get(48, "Selection") }}
+  </button>
+</div>

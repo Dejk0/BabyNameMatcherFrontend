@@ -5,7 +5,11 @@ import {
   tick,
 } from '@angular/core/testing';
 import { NamesListComponent } from './names-list.component';
-import { ApiClient, BaseValidResponse, HunNames } from '../ApiClient';
+import {
+  ApiClient,
+  BaseValidResponse,
+  NameSelectrionResultDto,
+} from '../ApiClient';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { LocalizationService } from '../services/localization.service';
@@ -69,7 +73,7 @@ describe('NamesListComponent', () => {
   });
 
   it('should load selected names when isThrowedNames is false', () => {
-    const data: HunNames[] = [
+    const data: NameSelectrionResultDto[] = [
       { id: 1, name: 'Anna' } as any,
       { id: 2, name: 'Béla' } as any,
     ];
@@ -84,7 +88,7 @@ describe('NamesListComponent', () => {
   });
 
   it('should load throwed names when isThrowedNames is true', () => {
-    const data: HunNames[] = [{ id: 3, name: 'Csaba' } as any];
+    const data: NameSelectrionResultDto[] = [{ id: 3, name: 'Csaba' } as any];
     apiMock.getThrowedNames.and.returnValue(of(data));
 
     component.isThrowedNames = true;

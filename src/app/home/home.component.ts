@@ -8,8 +8,14 @@ import {
   DragDropModule,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { ApiClient, HunNames, SelectNameParams } from '../ApiClient';
+import {
+  ApiClient,
+  NameSelectrionResultDto,
+  SelectNameParams,
+} from '../ApiClient';
 import { take, timestamp } from 'rxjs';
+import { MainfilterComponent } from '../mainfilter/mainfilter.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-home',
@@ -20,19 +26,22 @@ import { take, timestamp } from 'rxjs';
 export class HomeComponent {
   @ViewChildren(CdkDrag) dragRefs!: QueryList<CdkDrag>;
 
-  names: HunNames[] = [];
+  names: NameSelectrionResultDto[] = [];
 
   private animationInterval: any;
   private scrollY = 0;
   private isDragging = false;
 
-  constructor(private readonly client: ApiClient) {}
+  constructor(
+    private readonly client: ApiClient,
+    private readonly modal: NgbModal
+  ) {}
 
   ngOnInit() {
     this.client
       .getRandomNames()
       .pipe(take(1))
-      .subscribe((x: HunNames[]) => {
+      .subscribe((x: NameSelectrionResultDto[]) => {
         if (x) {
           x.map((y) => this.names.push(y));
         }
@@ -146,5 +155,27 @@ export class HomeComponent {
 
   deleteItem(index: number) {
     this.names.splice(index, 1);
+  }
+
+  openFilterDialog() {
+    const ref = this.modal.open(MainfilterComponent, {
+      size: 'md',
+      centered: true,
+      backdrop: 'static',
+    });
+
+    // opcionális: induló értékek átadása
+    // ref.componentInstance.initial = this.currentFilter;
+
+    // ref.result
+    //   .then((result: NameFilter | 'clear' | undefined) => {
+    //     if (result === 'clear') {
+    //       this.currentFilter = { search: '', gender: '' };
+    //     } else if (result) {
+    //       this.currentFilter = result;
+    //     }
+    //     this.applyFilter();
+    //   })
+    //   .catch(() => {});
   }
 }

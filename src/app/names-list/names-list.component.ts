@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ApiClient, HunNames } from '../ApiClient';
+import { ApiClient, NameSelectrionResultDto } from '../ApiClient';
 import { take } from 'rxjs';
 import { NameCardComponent } from '../name-card/name-card.component';
 import { NamebuttonsComponent } from '../namebuttons/namebuttons.component';
@@ -16,12 +16,12 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
   styleUrl: './names-list.component.css',
 })
 export class NamesListComponent implements OnInit {
-  names: HunNames[] = [];
+  names: NameSelectrionResultDto[] = [];
   isThrowedNames? = false;
   placeholder = '';
   searchCtrl = new FormControl<string>('', { nonNullable: true });
 
-  isVisible(item: HunNames): boolean {
+  isVisible(item: NameSelectrionResultDto): boolean {
     const q = this.searchCtrl.value.trim().toLowerCase();
     if (!q) return true;
     return (item.name ?? '').toLowerCase().includes(q);
@@ -61,7 +61,7 @@ export class NamesListComponent implements OnInit {
     }
   }
 
-  onClick(item: HunNames) {
+  onClick(item: NameSelectrionResultDto) {
     this.confirmAndThrow(item.id);
   }
 
@@ -94,7 +94,7 @@ export class NamesListComponent implements OnInit {
     });
   }
 
-  get filteredNames(): HunNames[] {
+  get filteredNames(): NameSelectrionResultDto[] {
     const q = this.searchCtrl.value.trim().toLowerCase();
     if (!q) return this.names;
     return this.names.filter((n) => (n.name ?? '').toLowerCase().includes(q));

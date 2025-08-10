@@ -62,3 +62,19 @@ button:hover {
   margin: 0 auto; /* középre igazítás */
   display: block; /* vagy inline-block */
 }
+
+.filter-fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px; /* ha inkább oldal közepére szeretnéd: top: 50%; transform: translateY(-50%); */
+  z-index: 2000; /* a drag-elt kártyák fölé kerüljön */
+  padding: 10px 16px;
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(45deg, #88c5ff, #ffa5c8);
+  cursor: pointer;
+}
+.filter-fab:hover {
+  opacity: 0.9;
+}

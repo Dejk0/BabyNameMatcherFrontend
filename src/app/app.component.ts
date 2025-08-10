@@ -11,7 +11,5 @@ import { LocalizationService } from './services/localization.service';
 export class AppComponent {
   title = 'my-app';
 
-  constructor(private locStore: LocalizationService) {
-    this.locStore.loadLocalizations('en');
-  }
+  constructor() {}
 }

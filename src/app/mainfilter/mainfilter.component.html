@@ -1,0 +1,52 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ loc.get(49, "Filter") }}</h4>
+  <button
+    type="button"
+    class="btn-close"
+    (click)="activeModal.dismiss()"
+  ></button>
+</div>
+<div class="modal-body">
+  <div class="mb-3">
+    <label class="form-label">{{ loc.get(50, "Search by name") }}</label>
+    <input
+      class="form-control"
+      [formControl]="searchNameController"
+      placeholder="pl. 'Anna'"
+    />
+  </div>
+  <ngb-alert
+    *ngIf="alertMessage"
+    [type]="alertType"
+    (closed)="alertMessage = null"
+  >
+    {{ alertMessage }}
+  </ngb-alert>
+  <div>
+    <button (click)="searchName()" class="btn btn-primary">
+      {{ loc.get(51, "Search") }}
+    </button>
+  </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="apply()">
+  <div class="modal-body">
+    <div class="mb-3">
+      <label class="form-label">{{ loc.get(52, "Gender") }}</label>
+      <select class="form-select" formControlName="gender">
+        <option value="">{{ loc.get(53, "All") }}</option>
+        <option value="M">{{ loc.get(54, "boy") }}</option>
+        <option value="F">{{ loc.get(55, "girl") }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="clear()">
+      {{ loc.get(56, "cancellation") }}
+    </button>
+    <button type="submit" class="btn btn-primary">
+      {{ loc.get(57, "Apply") }}
+    </button>
+  </div>
+</form>

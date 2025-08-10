@@ -746,7 +746,7 @@ export class ApiClient {
      * @param body (optional) 
      * @return OK
      */
-    getName(body: NameSelectionFilterConditions | undefined): Observable<HunNames> {
+    getName(body: NameSelectionFilterConditions | undefined): Observable<NameSelectrionResultDto> {
         let url_ = this.baseUrl + "/api/NameSelection/GetName";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -769,14 +769,14 @@ export class ApiClient {
                 try {
                     return this.processGetName(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<HunNames>;
+                    return _observableThrow(e) as any as Observable<NameSelectrionResultDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<HunNames>;
+                return _observableThrow(response_) as any as Observable<NameSelectrionResultDto>;
         }));
     }
 
-    protected processGetName(response: HttpResponseBase): Observable<HunNames> {
+    protected processGetName(response: HttpResponseBase): Observable<NameSelectrionResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -787,7 +787,7 @@ export class ApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = HunNames.fromJS(resultData200);
+            result200 = NameSelectrionResultDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -802,7 +802,7 @@ export class ApiClient {
      * @param body (optional) 
      * @return OK
      */
-    getRandomName(body: NameSelectionFilterConditions | undefined): Observable<HunNames[]> {
+    getRandomName(body: NameSelectionFilterConditions | undefined): Observable<NameSelectrionResultDto[]> {
         let url_ = this.baseUrl + "/api/NameSelection/GetRandomName";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -825,14 +825,14 @@ export class ApiClient {
                 try {
                     return this.processGetRandomName(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<HunNames[]>;
+                    return _observableThrow(e) as any as Observable<NameSelectrionResultDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<HunNames[]>;
+                return _observableThrow(response_) as any as Observable<NameSelectrionResultDto[]>;
         }));
     }
 
-    protected processGetRandomName(response: HttpResponseBase): Observable<HunNames[]> {
+    protected processGetRandomName(response: HttpResponseBase): Observable<NameSelectrionResultDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -846,7 +846,7 @@ export class ApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(HunNames.fromJS(item));
+                    result200!.push(NameSelectrionResultDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -864,7 +864,7 @@ export class ApiClient {
     /**
      * @return OK
      */
-    getRandomNames(): Observable<HunNames[]> {
+    getRandomNames(): Observable<NameSelectrionResultDto[]> {
         let url_ = this.baseUrl + "/api/NameSelection/GetRandomNames";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -883,14 +883,14 @@ export class ApiClient {
                 try {
                     return this.processGetRandomNames(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<HunNames[]>;
+                    return _observableThrow(e) as any as Observable<NameSelectrionResultDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<HunNames[]>;
+                return _observableThrow(response_) as any as Observable<NameSelectrionResultDto[]>;
         }));
     }
 
-    protected processGetRandomNames(response: HttpResponseBase): Observable<HunNames[]> {
+    protected processGetRandomNames(response: HttpResponseBase): Observable<NameSelectrionResultDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -904,7 +904,7 @@ export class ApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(HunNames.fromJS(item));
+                    result200!.push(NameSelectrionResultDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -922,7 +922,7 @@ export class ApiClient {
     /**
      * @return OK
      */
-    getSelectedNames(): Observable<HunNames[]> {
+    getSelectedNames(): Observable<NameSelectrionResultDto[]> {
         let url_ = this.baseUrl + "/api/NameSelection/GetSelectedNames";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -941,14 +941,14 @@ export class ApiClient {
                 try {
                     return this.processGetSelectedNames(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<HunNames[]>;
+                    return _observableThrow(e) as any as Observable<NameSelectrionResultDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<HunNames[]>;
+                return _observableThrow(response_) as any as Observable<NameSelectrionResultDto[]>;
         }));
     }
 
-    protected processGetSelectedNames(response: HttpResponseBase): Observable<HunNames[]> {
+    protected processGetSelectedNames(response: HttpResponseBase): Observable<NameSelectrionResultDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -962,7 +962,7 @@ export class ApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(HunNames.fromJS(item));
+                    result200!.push(NameSelectrionResultDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -980,7 +980,7 @@ export class ApiClient {
     /**
      * @return OK
      */
-    getThrowedNames(): Observable<HunNames[]> {
+    getThrowedNames(): Observable<NameSelectrionResultDto[]> {
         let url_ = this.baseUrl + "/api/NameSelection/GetThrowedNames";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -999,14 +999,14 @@ export class ApiClient {
                 try {
                     return this.processGetThrowedNames(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<HunNames[]>;
+                    return _observableThrow(e) as any as Observable<NameSelectrionResultDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<HunNames[]>;
+                return _observableThrow(response_) as any as Observable<NameSelectrionResultDto[]>;
         }));
     }
 
-    protected processGetThrowedNames(response: HttpResponseBase): Observable<HunNames[]> {
+    protected processGetThrowedNames(response: HttpResponseBase): Observable<NameSelectrionResultDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1020,7 +1020,7 @@ export class ApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(HunNames.fromJS(item));
+                    result200!.push(NameSelectrionResultDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1268,50 +1268,6 @@ export interface IGetFamilyNameResult {
     familyName?: string | undefined;
 }
 
-export class HunNames implements IHunNames {
-    id?: number;
-    name?: string | undefined;
-    gender?: string;
-
-    constructor(data?: IHunNames) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.gender = _data["gender"];
-        }
-    }
-
-    static fromJS(data: any): HunNames {
-        data = typeof data === 'object' ? data : {};
-        let result = new HunNames();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["gender"] = this.gender;
-        return data;
-    }
-}
-
-export interface IHunNames {
-    id?: number;
-    name?: string | undefined;
-    gender?: string;
-}
-
 export class LocalizationParamsDto implements ILocalizationParamsDto {
     languageCode?: string | undefined;
     key?: number[] | undefined;
@@ -1453,7 +1409,6 @@ export class NameSelectionFilterConditions implements INameSelectionFilterCondit
     gender?: string | undefined;
     startCharacter?: string | undefined;
     quantity?: number;
-    userId?: string | undefined;
 
     constructor(data?: INameSelectionFilterConditions) {
         if (data) {
@@ -1470,7 +1425,6 @@ export class NameSelectionFilterConditions implements INameSelectionFilterCondit
             this.gender = _data["gender"];
             this.startCharacter = _data["startCharacter"];
             this.quantity = _data["quantity"];
-            this.userId = _data["userId"];
         }
     }
 
@@ -1487,7 +1441,6 @@ export class NameSelectionFilterConditions implements INameSelectionFilterCondit
         data["gender"] = this.gender;
         data["startCharacter"] = this.startCharacter;
         data["quantity"] = this.quantity;
-        data["userId"] = this.userId;
         return data;
     }
 }
@@ -1497,7 +1450,66 @@ export interface INameSelectionFilterConditions {
     gender?: string | undefined;
     startCharacter?: string | undefined;
     quantity?: number;
-    userId?: string | undefined;
+}
+
+export class NameSelectrionResultDto implements INameSelectrionResultDto {
+    isValid?: boolean;
+    message?: string[] | undefined;
+    id?: number;
+    name?: string | undefined;
+    gender?: string;
+
+    constructor(data?: INameSelectrionResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isValid = _data["isValid"];
+            if (Array.isArray(_data["message"])) {
+                this.message = [] as any;
+                for (let item of _data["message"])
+                    this.message!.push(item);
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.gender = _data["gender"];
+        }
+    }
+
+    static fromJS(data: any): NameSelectrionResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new NameSelectrionResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isValid"] = this.isValid;
+        if (Array.isArray(this.message)) {
+            data["message"] = [];
+            for (let item of this.message)
+                data["message"].push(item);
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["gender"] = this.gender;
+        return data;
+    }
+}
+
+export interface INameSelectrionResultDto {
+    isValid?: boolean;
+    message?: string[] | undefined;
+    id?: number;
+    name?: string | undefined;
+    gender?: string;
 }
 
 export class RegisterResultDto implements IRegisterResultDto {
