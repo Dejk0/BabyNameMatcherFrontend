@@ -97,61 +97,54 @@ export class HomeComponent {
   }
 
   onDragReleased(event: CdkDragRelease, index: number) {
-    const scrollContainer = document.querySelector(
-      '.scroll-content'
-    ) as HTMLElement;
-    const computedStyle = window.getComputedStyle(scrollContainer);
-    const columnWidth = parseInt(computedStyle.width, 10);
+    const el = document.querySelector('.scroll-content') as HTMLElement;
+    const w = parseInt(window.getComputedStyle(el).width, 10);
+    const threshold = w * 0.4;
 
-    const threshold = columnWidth * 0.4;
+    const item = this.names[index];
+    const id = item?.id;
 
     if (this.dragedPointX > 0) {
       if (this.dragedPointX >= threshold) {
-        this.names.splice(index, 1);
-        this.selected(index);
+        if (id != null) this.selectedById(id); // ← id-vel hívjuk
+        this.names.splice(index, 1); // ← csak utána törlünk
       }
     } else {
       if (this.dragedPointX <= -threshold) {
+        if (id != null) this.throwedById(id);
         this.names.splice(index, 1);
-        this.throwed(index);
       }
     }
+
     const dragRef = this.dragRefs.toArray()[index];
-    if (dragRef) {
-      dragRef.reset();
-    }
+    if (dragRef) dragRef.reset();
 
     this.lastPointerX = 0;
     this.dragedPointX = 0;
   }
 
+  // — új, id-alapú metódusok —
+  selectedById(id: number) {
+    const params = new SelectNameParams({ id });
+    this.client.createSelectsName(params).pipe(take(1)).subscribe();
+  }
+
+  throwedById(id: number) {
+    const params = new SelectNameParams({ id });
+    this.client.createThrowedName(params).pipe(take(1)).subscribe();
+  }
+
+  // (opcionális) kompatibilitási wrapper, ha máshol indexszel hívod:
+  selected(index: number) {
+    const id = this.names[index]?.id;
+    if (id != null) this.selectedById(id);
+  }
+  throwed(index: number) {
+    const id = this.names[index]?.id;
+    if (id != null) this.throwedById(id);
+  }
+
   deleteItem(index: number) {
     this.names.splice(index, 1);
-  }
-
-  selected(index: number) {
-    const name = this.names[index];
-    const params = new SelectNameParams({ id: name.id });
-    this.client
-      .createSelectsName(params)
-      .pipe(take(1))
-      .subscribe((x) => {
-        if (!x) {
-          //hibaüzenet
-        }
-      });
-  }
-
-  throwed(index: number) {
-    const name = this.names[index];
-    const params = new SelectNameParams({ id: name.id });
-    this.client
-      .createThrowedName(params)
-      .pipe(take(1))
-      .subscribe((x) => {
-        if (!x) {
-          //hibaüzenet
-        }
-      });
   }
 }

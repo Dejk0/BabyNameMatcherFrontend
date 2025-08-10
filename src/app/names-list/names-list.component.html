@@ -13,9 +13,19 @@
     (click)="close()"
   ></button>
 </div>
+
+<div class="px-3 pb-2 mb-3 mt-2">
+  <input
+    type="text"
+    class="form-control"
+    [formControl]="searchCtrl"
+    [placeholder]="placeholder"
+  />
+</div>
+
 <div class="name-grid">
   <app-namebuttons
-    *ngFor="let item of names; let i = index"
+    *ngFor="let item of filteredNames; let i = index"
     [name]="item?.name ? item?.name : ''"
     [familyName]="'Deák'"
     [gender]="item?.gender ? item?.gender : ''"

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ApiClient, HunNames } from '../ApiClient';
 import { take } from 'rxjs';
 import { NameCardComponent } from '../name-card/name-card.component';
@@ -18,6 +18,14 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 export class NamesListComponent implements OnInit {
   names: HunNames[] = [];
   isThrowedNames? = false;
+  placeholder = '';
+  searchCtrl = new FormControl<string>('', { nonNullable: true });
+
+  isVisible(item: HunNames): boolean {
+    const q = this.searchCtrl.value.trim().toLowerCase();
+    if (!q) return true;
+    return (item.name ?? '').toLowerCase().includes(q);
+  }
 
   constructor(
     private readonly client: ApiClient,
@@ -28,6 +36,7 @@ export class NamesListComponent implements OnInit {
 
   ngOnInit(): void {
     this.load();
+    this.placeholder = this.loc.get(42, 'Search by name…');
   }
 
   load() {
@@ -83,5 +92,11 @@ export class NamesListComponent implements OnInit {
           });
       }
     });
+  }
+
+  get filteredNames(): HunNames[] {
+    const q = this.searchCtrl.value.trim().toLowerCase();
+    if (!q) return this.names;
+    return this.names.filter((n) => (n.name ?? '').toLowerCase().includes(q));
   }
 }
