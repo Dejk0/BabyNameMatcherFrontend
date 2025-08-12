@@ -10,6 +10,7 @@ import {
 import { CommonModule } from '@angular/common';
 import {
   ApiClient,
+  NameSelectionFilterConditions,
   NameSelectrionResultDto,
   SelectNameParams,
 } from '../ApiClient';
@@ -37,15 +38,39 @@ export class HomeComponent {
     private readonly modal: NgbModal
   ) {}
 
-  ngOnInit() {
+  load(params: NameSelectionFilterConditions) {
+    if (params?.gender === '' && params?.startCharacter === '') {
+      params = new NameSelectionFilterConditions();
+    }
     this.client
-      .getRandomNames()
+      .getRandomNames(params)
       .pipe(take(1))
       .subscribe((x: NameSelectrionResultDto[]) => {
         if (x) {
+          this.names = [];
           x.map((y) => this.names.push(y));
         }
       });
+  }
+  ngOnInit() {
+    const params = new NameSelectionFilterConditions();
+    const gender = localStorage.getItem('gender');
+    if (gender) {
+      if (gender === 'F') {
+        params.gender = gender;
+      }
+      if (gender === 'M') {
+        params.gender = gender;
+      }
+    }
+    const letters = 'AÁBCDEÉFGHIÍJKLMNOÓÖŐPRSTUÚÜVXZ'.split('');
+    const startChar = localStorage.getItem('char');
+    if (startChar) {
+      if (letters.includes(startChar)) {
+        params.startCharacter = startChar;
+      }
+    }
+    this.load(params);
     this.startAutoScroll();
     window.addEventListener('mousedown', this.onPointerDown);
     window.addEventListener('mouseup', this.onPointerUp);
@@ -164,18 +189,19 @@ export class HomeComponent {
       backdrop: 'static',
     });
 
-    // opcionális: induló értékek átadása
-    // ref.componentInstance.initial = this.currentFilter;
-
-    // ref.result
-    //   .then((result: NameFilter | 'clear' | undefined) => {
-    //     if (result === 'clear') {
-    //       this.currentFilter = { search: '', gender: '' };
-    //     } else if (result) {
-    //       this.currentFilter = result;
-    //     }
-    //     this.applyFilter();
-    //   })
-    //   .catch(() => {});
+    ref.result
+      .then((result: NameSelectionFilterConditions) => {
+        if (result) {
+          if (result.gender !== 'F' && result.gender !== 'M') {
+            result.gender = undefined;
+          }
+          const letters = 'AÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ'.split('');
+          if (!result.startCharacter) {
+            result.startCharacter = undefined;
+          }
+          this.load(result);
+        }
+      })
+      .catch(() => {});
   }
 }

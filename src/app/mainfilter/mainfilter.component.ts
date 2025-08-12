@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild,
+  viewChild,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -26,17 +33,17 @@ import { SelectNameComponent } from '../select-name/select-name.component';
   templateUrl: './mainfilter.component.html',
   styleUrl: './mainfilter.component.css',
 })
-export class MainfilterComponent {
+export class MainfilterComponent implements OnInit {
   @Input() initial = null;
 
+  @ViewChild('nameSearch') nameSearch!: ElementRef<HTMLElement>;
+  letters = 'AÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ'.split('');
   searchNameController = new FormControl('', [Validators.required]);
+  genderController = new FormControl<'' | 'M' | 'F'>('');
+  charController = new FormControl('');
 
   alertMessage: string | null = null; // 👈 állapot
   alertType: 'success' | 'warning' | 'danger' | 'info' = 'danger';
-
-  form = new FormGroup({
-    gender: new FormControl<'' | 'M' | 'F'>(''),
-  });
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -45,12 +52,26 @@ export class MainfilterComponent {
     public readonly loc: LocalizationService
   ) {}
 
-  ngOnInit() {
-    if (this.initial) this.form.patchValue(this.initial);
-  }
+  genderGroup = new FormGroup({
+    male: new FormControl(true),
+    female: new FormControl(false),
+  });
 
-  apply() {
-    this.activeModal.close(this.form.value);
+  ngOnInit() {
+    const gender = localStorage.getItem('gender');
+    if (gender) {
+      if (gender === 'F') {
+        this.genderController.setValue(gender);
+      }
+      if (gender === 'M') {
+        this.genderController.setValue(gender);
+      }
+    }
+
+    const savedChar = localStorage.getItem('char');
+    if (savedChar) {
+      this.charController.setValue(savedChar);
+    }
   }
 
   clear() {
@@ -94,5 +115,50 @@ export class MainfilterComponent {
           })
           .catch(() => {});
       });
+  }
+
+  toggleGender(g: any) {
+    const c = this.genderController;
+    if (c.value === g) {
+      c.setValue('');
+    } else {
+      c.setValue(g);
+    }
+    this.genderCtrl();
+  }
+
+  genderCtrl() {
+    const gender = this.genderController.value;
+    if (gender) {
+      localStorage.setItem('gender', gender);
+    } else {
+      localStorage.setItem('gender', '');
+    }
+  }
+
+  toggleStartChar(letter: string) {
+    const c = this.charController;
+    if (c.value === letter) {
+      c.setValue('');
+    } else {
+      c.setValue(letter);
+    }
+    this.charCtrl();
+  }
+
+  charCtrl() {
+    const char = this.charController.value;
+    localStorage.setItem('char', char || '');
+  }
+
+  onClose() {
+    const gender = this.genderController.value;
+    const startChar = this.charController.value;
+    const params = new NameSelectionFilterConditions({
+      gender: gender?.toString(),
+      startCharacter: startChar?.toString(),
+    });
+
+    this.activeModal.close(params);
   }
 }

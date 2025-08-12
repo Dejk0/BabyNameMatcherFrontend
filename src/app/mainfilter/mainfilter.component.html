@@ -10,6 +10,7 @@
   <div class="mb-3">
     <label class="form-label">{{ loc.get(50, "Search by name") }}</label>
     <input
+      #nameSearch
       class="form-control"
       [formControl]="searchNameController"
       placeholder="pl. 'Anna'"
@@ -29,24 +30,54 @@
   </div>
 </div>
 
-<form [formGroup]="form" (ngSubmit)="apply()">
-  <div class="modal-body">
-    <div class="mb-3">
-      <label class="form-label">{{ loc.get(52, "Gender") }}</label>
-      <select class="form-select" formControlName="gender">
-        <option value="">{{ loc.get(53, "All") }}</option>
-        <option value="M">{{ loc.get(54, "boy") }}</option>
-        <option value="F">{{ loc.get(55, "girl") }}</option>
-      </select>
+<div class="modal-body">
+  <h4>{{ loc.get(52, "Gender") }}</h4>
+  <div class="d-flex gap-4 align-items-center">
+    <div class="form-check form-switch m-0">
+      <input
+        type="checkbox"
+        id="maleCheck"
+        class="form-check-input"
+        [checked]="genderController.value !== 'F'"
+        (click)="toggleGender('F')"
+      />
+      <label class="form-check-label ms-2" for="maleCheck">
+        {{ loc.get(54, "boy") }}
+      </label>
+    </div>
+
+    <div class="form-check form-switch m-0">
+      <input
+        type="checkbox"
+        id="femaleCheck"
+        class="form-check-input"
+        [checked]="genderController.value !== 'M'"
+        (click)="toggleGender('M')"
+      />
+      <label class="form-check-label ms-2" for="femaleCheck">
+        {{ loc.get(55, "girl") }}
+      </label>
     </div>
   </div>
+</div>
 
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="clear()">
-      {{ loc.get(56, "cancellation") }}
-    </button>
-    <button type="submit" class="btn btn-primary">
-      {{ loc.get(57, "Apply") }}
+<div class="modal-body">
+  <h4>{{ loc.get(58, "Initial letter") }}</h4>
+  <div class="d-flex flex-wrap gap-2">
+    <button
+      *ngFor="let letter of letters"
+      type="button"
+      class="btn btn-outline-primary"
+      [class.active]="charController.value === letter"
+      (click)="toggleStartChar(letter)"
+    >
+      {{ letter }}
     </button>
   </div>
-</form>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" (click)="onClose()">
+    {{ loc.get(59, "Reload names") }}
+  </button>
+</div>

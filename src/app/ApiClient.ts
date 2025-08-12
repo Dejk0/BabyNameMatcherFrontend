@@ -862,16 +862,21 @@ export class ApiClient {
     }
 
     /**
+     * @param body (optional) 
      * @return OK
      */
-    getRandomNames(): Observable<NameSelectrionResultDto[]> {
+    getRandomNames(body: NameSelectionFilterConditions | undefined): Observable<NameSelectrionResultDto[]> {
         let url_ = this.baseUrl + "/api/NameSelection/GetRandomNames";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Content-Type": "application/json",
                 "Accept": "text/plain"
             })
         };
