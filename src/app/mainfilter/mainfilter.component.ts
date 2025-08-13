@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  ViewChild,
-  viewChild,
-} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -37,7 +30,7 @@ export class MainfilterComponent implements OnInit {
   @Input() initial = null;
 
   @ViewChild('nameSearch') nameSearch!: ElementRef<HTMLElement>;
-  letters = 'AÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ'.split('');
+  letters = 'AÁBCDEÉFGHIÍJKLMNOÓÖŐPRSTUÚÜVXZ'.split('');
   searchNameController = new FormControl('', [Validators.required]);
   genderController = new FormControl<'' | 'M' | 'F'>('');
   charController = new FormControl('');

@@ -75,6 +75,7 @@ button:hover {
   background: linear-gradient(45deg, #88c5ff, #ffa5c8);
   cursor: pointer;
 }
+
 .filter-fab:hover {
   opacity: 0.9;
 }

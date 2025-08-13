@@ -28,7 +28,7 @@ export class HomeComponent {
   @ViewChildren(CdkDrag) dragRefs!: QueryList<CdkDrag>;
 
   names: NameSelectrionResultDto[] = [];
-
+  quantity = 20;
   private animationInterval: any;
   private scrollY = 0;
   private isDragging = false;
@@ -42,6 +42,7 @@ export class HomeComponent {
     if (params?.gender === '' && params?.startCharacter === '') {
       params = new NameSelectionFilterConditions();
     }
+    params.quantity = this.quantity;
     this.client
       .getRandomNames(params)
       .pipe(take(1))
@@ -71,6 +72,7 @@ export class HomeComponent {
       }
     }
     this.load(params);
+
     this.startAutoScroll();
     window.addEventListener('mousedown', this.onPointerDown);
     window.addEventListener('mouseup', this.onPointerUp);
@@ -88,20 +90,53 @@ export class HomeComponent {
     window.removeEventListener('touchend', this.onPointerUp);
   }
 
+  private currentItemLimit = 0;
+
+  private getItemHeight(index = 0): number {
+    const wrappers = document.querySelectorAll('.draggable-wrapper');
+    if (!wrappers.length || !wrappers[index]) return 0;
+    const w = wrappers[index] as HTMLElement;
+    const r = w.getBoundingClientRect();
+    const cs = getComputedStyle(w);
+    const mt = parseFloat(cs.marginTop || '0');
+    const mb = parseFloat(cs.marginBottom || '0');
+    return r.height + mt + mb;
+  }
+
   startAutoScroll() {
     this.animationInterval = setInterval(() => {
-      if (!this.isDragging) {
-        this.scrollY -= 0.5; // sebesség
-        const el = document.querySelector('.scroll-content') as HTMLElement;
-        if (el) {
-          el.style.transform = `translateY(${this.scrollY}px)`;
-          // ha teljesen elfogyott, reseteljük
-          if (Math.abs(this.scrollY) > el.scrollHeight / 2) {
-            this.scrollY = 0;
-          }
+      const el = document.querySelector('.scroll-content') as HTMLElement;
+      if (!el) return;
+
+      const windowHeight = window.innerHeight;
+      if (!this.isDragging && el.scrollHeight > windowHeight - 50) {
+        // 1) ha még nincs limit, mérjük meg az első (index 0) wrappert
+        if (!this.currentItemLimit) {
+          this.currentItemLimit = this.getItemHeight(0);
         }
+
+        // 2) léptetés
+        this.scrollY -= 0.5;
+
+        // 3) ha átléptük a TÉNYLEGES első elem magasságát: törlés + overshoot korrekció
+        if (Math.abs(this.scrollY) >= this.currentItemLimit) {
+          this.names.shift();
+
+          // hagyd meg a finom „túlfutás” megőrzését, de pontos magassággal
+          const overshoot = Math.abs(this.scrollY) - this.currentItemLimit;
+          this.scrollY = -overshoot;
+
+          // 4) új limit a következő első elemre
+          this.currentItemLimit = this.getItemHeight(0);
+        }
+
+        el.style.transform = `translateY(${this.scrollY}px)`;
+      } else {
+        this.scrollY = 0;
+        this.currentItemLimit = 0; // reset
+        el.style.transform = `translateY(0px)`;
       }
-    }, 1); // kb. 60fps
+    }, 1);
   }
 
   private lastPointerX: number = 0;
@@ -195,7 +230,6 @@ export class HomeComponent {
           if (result.gender !== 'F' && result.gender !== 'M') {
             result.gender = undefined;
           }
-          const letters = 'AÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ'.split('');
           if (!result.startCharacter) {
             result.startCharacter = undefined;
           }
