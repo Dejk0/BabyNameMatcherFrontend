@@ -1,11 +1,11 @@
 <div class="container py-3">
   <div class="d-flex justify-content-between py-2">
-    <h3 class="modal-title">Partner összekapcsolás</h3>
+    <h3 class="modal-title">{{ loc.get(1069, "Partner connection") }}</h3>
     <button
       type="button"
       class="btn-close"
       (click)="close()"
-      aria-label="Bezárás"
+      aria-label="Close"
     ></button>
   </div>
 
@@ -15,7 +15,7 @@
       [class.active]="mode() === 'email'"
       (click)="setMode('email')"
     >
-      E‑mail meghívó
+      {{ loc.get(1070, "Email invitation") }}
     </button>
     <button
       class="btn btn-outline-primary"
@@ -29,7 +29,7 @@
       [class.active]="mode() === 'delete'"
       (click)="setMode('delete')"
     >
-      Összekapcsolás törlése
+      {{ loc.get(1071, "Delete connection") }}
     </button>
   </div>
 
@@ -46,7 +46,7 @@
   <div class="card mb-4" [hidden]="mode() !== 'token'">
     <div class="card-body">
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <h5 class="mb-0">Saját token</h5>
+        <h5 class="mb-0">{{ loc.get(1072, "Own token") }}</h5>
       </div>
 
       <div class="input-group">
@@ -59,12 +59,18 @@
           (click)="selectAll(tokenBox)"
         />
         <button class="btn btn-outline-secondary" (click)="copy(myToken())">
-          Másolás
+          {{ loc.get(1073, "Copy") }}
         </button>
       </div>
 
-      <small class="text-muted d-block mt-2">
-        Tipp: kattints a mezőre a teljes kijelöléshez, majd másold a vágólapra.
+      <small class="text-muted d-block mt-2"
+        >tipp:
+        {{
+          loc.get(
+            1074,
+            "Click on the field to select the entire text, then copy it to the clipboard."
+          )
+        }}
       </small>
     </div>
   </div>
@@ -73,10 +79,14 @@
   <div [hidden]="mode() !== 'email'">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title mb-3">Meghívó küldése e‑mailben</h5>
+        <h5 class="card-title mb-3">
+          {{ loc.get(1081, "Send invitation by email") }}
+        </h5>
 
         <form [formGroup]="emailForm" (ngSubmit)="sendInviteEmail()">
-          <label class="form-label">Partner e‑mail címe</label>
+          <label class="form-label">{{
+            loc.get(1082, "Partner email address")
+          }}</label>
           <input
             type="email"
             class="form-control"
@@ -90,7 +100,7 @@
               emailForm.controls.email.invalid
             "
           >
-            Adj meg érvényes e‑mail címet.
+            {{ loc.get(1083, "Please enter a valid email address.") }}
           </div>
 
           <div class="mt-3">
@@ -99,7 +109,7 @@
               type="submit"
               [disabled]="this.loading | async"
             >
-              Meghívó küldése
+              {{ loc.get(1084, "Send invitation") }}
             </button>
           </div>
         </form>
@@ -110,14 +120,18 @@
   <div [hidden]="mode() !== 'token'">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title mb-3">Összekapcsolás tokennel</h5>
+        <h5 class="card-title mb-3">
+          {{ loc.get(1075, "Connecting with token") }}
+        </h5>
 
         <form [formGroup]="tokenForm" (ngSubmit)="connectWithToken()">
-          <label class="form-label">Beérkezett token</label>
+          <label class="form-label">{{
+            loc.get(1076, "Token received")
+          }}</label>
           <input
             type="text"
             class="form-control"
-            placeholder="Illeszd be a partnered tokenét"
+            [placeholder]="tokenInputPlaceHolder"
             formControlName="token"
           />
 
@@ -127,15 +141,20 @@
               [disabled]="this.loading | async"
               type="submit"
             >
-              Összekapcsolás
+              {{ loc.get(1078, "Interconnection") }}
             </button>
           </div>
         </form>
 
         <hr />
         <p class="mb-1">
-          <strong>Vagy:</strong> ha a partnerednek nincs még linkje/tokenje,
-          küldd el neki a fenti „Saját token linked”-et.
+          <strong>{{ loc.get(1079, "Or") }}:</strong>
+          {{
+            loc.get(
+              1080,
+              "If your partner does not have a token yet, send them your own token using the above link."
+            )
+          }}
         </p>
       </div>
     </div>
@@ -144,14 +163,18 @@
   <div [hidden]="mode() !== 'delete'">
     <div class="card border-danger">
       <div class="card-body">
-        <h5 class="card-title text-danger mb-2">Összekapcsolás törlése</h5>
-        <p class="mb-3">Ezzel megszünteted a jelenlegi párosítást.</p>
+        <h5 class="card-title text-danger mb-2">
+          {{ loc.get(1071, "Delete connection") }}
+        </h5>
+        <p class="mb-3">
+          {{ loc.get(1085, "This will cancel the current pairing.") }}
+        </p>
         <button
           class="btn btn-outline-danger"
           [disabled]="this.loading | async"
           (click)="disconnect()"
         >
-          Kapcsolat bontása
+          {{ loc.get(1086, "Disconnect") }}
         </button>
       </div>
     </div>

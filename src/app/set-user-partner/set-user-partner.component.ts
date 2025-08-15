@@ -25,6 +25,7 @@ import {
   take,
   tap,
 } from 'rxjs';
+import { LocalizationService } from '../services/localization.service';
 
 type Mode = 'email' | 'token' | 'delete';
 
@@ -61,11 +62,20 @@ export class SetUserPartnerComponent implements OnInit {
   alertType = signal<'success' | 'warning' | 'danger' | null>(null);
   alertMsg = signal<string | null>(null);
   canGenerateNew = signal<boolean>(false);
+  tokenInputPlaceHolder = '';
 
-  constructor(private client: ApiClient, public activeModal: NgbActiveModal) {}
+  constructor(
+    private client: ApiClient,
+    public activeModal: NgbActiveModal,
+    public loc: LocalizationService
+  ) {}
 
   ngOnInit(): void {
     this.loadOwnLink();
+    this.tokenInputPlaceHolder = this.loc.get(
+      1077,
+      "Insert your partner's token"
+    );
   }
 
   setMode(m: Mode) {
