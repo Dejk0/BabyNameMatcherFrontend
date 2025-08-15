@@ -110,14 +110,11 @@ export class HomeComponent {
   }
 
   setFamilyName() {
-    this.auth
-      .refresFamilyName()
-      .pipe(skip(1), take(1))
-      .subscribe((x) => {
-        if (x) {
-          this.familyName = x;
-        }
-      });
+    this.auth.refresFamilyName();
+
+    this.auth.userSelectedFamilyname.pipe().subscribe((x) => {
+      this.familyName = x;
+    });
   }
 
   startAutoScroll() {

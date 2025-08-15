@@ -4,6 +4,7 @@ import { NameCardComponent } from '../name-card/name-card.component';
 import { NameSelectrionResultDto } from '../ApiClient';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LocalizationService } from '../services/localization.service';
+import { AuthService } from '../auth/auth.module';
 
 @Component({
   selector: 'app-select-name',
@@ -13,7 +14,7 @@ import { LocalizationService } from '../services/localization.service';
 })
 export class SelectNameComponent {
   @Input() nameDto?: NameSelectrionResultDto;
-
+  @Input() familyName = '';
   constructor(
     public activeModal: NgbActiveModal,
     public loc: LocalizationService

@@ -22,7 +22,7 @@ interface TokenPayload {
 export class AuthService {
   public readonly TOKEN_KEY = 'access_token';
   public username: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  private userSelectedFamilyname: BehaviorSubject<string> =
+  public userSelectedFamilyname: BehaviorSubject<string> =
     new BehaviorSubject<string>('');
 
   constructor(private client: ApiClient) {}

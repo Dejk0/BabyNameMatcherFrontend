@@ -16,7 +16,7 @@
   ></button>
 </div>
 
-<div class="px-3 pb-2 mb-3 mt-2" *ngIf="names.length > 0">
+<div class="px-3 pb-2 mb-3 mt-2" *ngIf="names.length > 1">
   <input
     type="text"
     class="form-control"
@@ -29,10 +29,37 @@
   <app-namebuttons
     *ngFor="let item of filteredNames; let i = index"
     [name]="item?.name ? item?.name : ''"
-    [familyName]="'Deák'"
+    [familyName]="this.familyName"
     [gender]="item?.gender ? item?.gender : ''"
     (clicked)="onClick(item)"
   ></app-namebuttons>
 </div>
 
-<div *ngIf="names.length === 0 && !hasPair">Válasz párt</div>
+<div
+  class="px-3 pb-2 mb-3 mt-2"
+  *ngIf="
+    names.length === 0 &&
+    !hasPair &&
+    !this.isThrowedNames &&
+    this.isMatchedNames
+  "
+>
+  <h5>{{ loc.get(1089, "No name matched") }}</h5>
+  <p>{{ loc.get(1090, "For common names, first respond to the partner.") }}</p>
+</div>
+
+<div
+  class="px-3 pb-2 mb-3 mt-2"
+  *ngIf="names.length === 0 && !this.isThrowedNames && !this.isMatchedNames"
+>
+  <h5>{{ loc.get(1091, "You have not selected a name") }}</h5>
+  <p>{{ loc.get(1092, "Drag a name to the right to choose.") }}</p>
+</div>
+
+<div
+  class="px-3 pb-2 mb-3 mt-2"
+  *ngIf="names.length === 0 && this.isThrowedNames && !this.isMatchedNames"
+>
+  <h5>{{ loc.get(1093, "You have no discarded a name.") }}</h5>
+  <p>{{ loc.get(1094, "Drag a name to the left to throw it away.") }}</p>
+</div>

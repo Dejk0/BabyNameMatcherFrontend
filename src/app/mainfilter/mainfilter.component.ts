@@ -19,6 +19,7 @@ import {
 import { LocalizationService } from '../services/localization.service';
 import { take } from 'rxjs';
 import { SelectNameComponent } from '../select-name/select-name.component';
+import { AuthService } from '../auth/auth.module';
 
 @Component({
   selector: 'app-mainfilter',
@@ -34,7 +35,7 @@ export class MainfilterComponent implements OnInit {
   searchNameController = new FormControl('', [Validators.required]);
   genderController = new FormControl<'' | 'M' | 'F'>('');
   charController = new FormControl('');
-
+  familyName = '';
   alertMessage: string | null = null; // 👈 állapot
   alertType: 'success' | 'warning' | 'danger' | 'info' = 'danger';
 
@@ -42,7 +43,8 @@ export class MainfilterComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private readonly modal: NgbModal,
     private readonly client: ApiClient,
-    public readonly loc: LocalizationService
+    public readonly loc: LocalizationService,
+    public auth: AuthService
   ) {}
 
   genderGroup = new FormGroup({
@@ -51,6 +53,7 @@ export class MainfilterComponent implements OnInit {
   });
 
   ngOnInit() {
+    this.familyName = this.auth.userSelectedFamilyname.value;
     const gender = localStorage.getItem('gender');
     if (gender) {
       if (gender === 'F') {
@@ -94,7 +97,7 @@ export class MainfilterComponent implements OnInit {
 
         // átadjuk a visszakapott nevet a modalnak
         ref.componentInstance.nameDto = x;
-
+        ref.componentInstance.familyName = this.familyName;
         // felhasználó döntése
         ref.result
           .then((res: { action: 'select' | 'throw'; name: typeof x }) => {

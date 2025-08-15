@@ -29,6 +29,32 @@
       </button>
     </ng-template>
   </div>
+  <div class="mb-3">
+    <button class="btn btn-primary" (click)="openChangePasswordModal()">
+      {{ loc.get(24, "Change password") }}
+    </button>
+  </div>
+  <div class="d-flex gap-2">
+    <div class="mb-3">
+      <button
+        class="btn btn-outline-primary"
+        (click)="openSelectedNamesModal()"
+      >
+        {{ loc.get(34, "Selected names") }}
+      </button>
+    </div>
+    <div class="mb-3">
+      <button class="btn btn-outline-success" (click)="openMatchedNamesModal()">
+        {{ loc.get(36, "Matched names") }}
+      </button>
+    </div>
+
+    <div class="mb-3">
+      <button class="btn btn-outline-danger" (click)="openThrowedNamesModal()">
+        {{ loc.get(35, "Throwed names") }}
+      </button>
+    </div>
+  </div>
 
   <form [formGroup]="settingsForm">
     <div class="mb-3">
@@ -41,27 +67,6 @@
       <input type="text" class="form-control" formControlName="familyName" />
     </div>
   </form>
-
-  <div class="mb-3">
-    <button class="btn btn-primary" (click)="openChangePasswordModal()">
-      {{ loc.get(24, "Change password") }}
-    </button>
-  </div>
-  <div class="mb-3">
-    <button class="btn btn-primary" (click)="openMatchedNamesModal()">
-      Match
-    </button>
-  </div>
-  <div class="mb-3">
-    <button class="btn btn-primary" (click)="openSelectedNamesModal()">
-      {{ loc.get(34, "Selected names") }}
-    </button>
-  </div>
-  <div class="mb-3">
-    <button class="btn btn-primary" (click)="openThrowedNamesModal()">
-      {{ loc.get(35, "Throwed names") }}
-    </button>
-  </div>
 
   <div class="modal-footer">
     <button class="btn btn-secondary" (click)="close()">

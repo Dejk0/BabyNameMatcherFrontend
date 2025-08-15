@@ -18,6 +18,7 @@ import { AuthService } from '../auth/auth.module';
 })
 export class NamesListComponent implements OnInit {
   @Input() hasPair: boolean = false;
+  @Input() familyName: string = '';
 
   names: NameSelectrionResultDto[] = [];
   isThrowedNames? = false;

@@ -58,10 +58,8 @@ export class UserSettingsComponent implements OnInit {
         } else {
         }
       });
-
-    this.familyNameController.setValue(
-      this.auth.getUserSelectedFamilyname$().value
-    );
+    this.familyName = this.auth.userSelectedFamilyname.value;
+    this.familyNameController.setValue(this.familyName);
   }
 
   save() {
@@ -71,7 +69,12 @@ export class UserSettingsComponent implements OnInit {
       const settings = this.settingsForm.value;
 
       if (familyName !== this.familyName) {
-        this.loadPartnerName();
+        this.client
+          .changeFamilyname(new ChangeNameParams({ newName: familyName }))
+          .pipe(take(1))
+          .subscribe((x) => {
+            this.auth.refresFamilyName();
+          });
       }
 
       if (name !== this.auth.username?.value) {
@@ -106,11 +109,12 @@ export class UserSettingsComponent implements OnInit {
   }
 
   openSelectedNamesModal() {
-    this.modalService.open(NamesListComponent, {
+    const ref = this.modalService.open(NamesListComponent, {
       size: 'md',
       backdrop: 'static',
       centered: true,
     });
+    ref.componentInstance.familyName = this.familyName;
   }
 
   openThrowedNamesModal() {
@@ -120,6 +124,7 @@ export class UserSettingsComponent implements OnInit {
       centered: true,
     });
     ref.componentInstance.isThrowedNames = true;
+    ref.componentInstance.familyName = this.familyName;
   }
 
   openMatchedNamesModal() {
@@ -130,6 +135,7 @@ export class UserSettingsComponent implements OnInit {
     });
     ref.componentInstance.isMatchedNames = true;
     ref.componentInstance.hasPair = false;
+    ref.componentInstance.familyName = this.familyName;
   }
 
   openUserPartnerModal() {
