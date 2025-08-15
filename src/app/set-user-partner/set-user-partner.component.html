@@ -1,0 +1,159 @@
+<div class="container py-3">
+  <div class="d-flex justify-content-between py-2">
+    <h3 class="modal-title">Partner összekapcsolás</h3>
+    <button
+      type="button"
+      class="btn-close"
+      (click)="close()"
+      aria-label="Bezárás"
+    ></button>
+  </div>
+
+  <div class="btn-group mb-3" role="group" aria-label="modes">
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="mode() === 'email'"
+      (click)="setMode('email')"
+    >
+      E‑mail meghívó
+    </button>
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="mode() === 'token'"
+      (click)="setMode('token')"
+    >
+      Token link
+    </button>
+    <button
+      class="btn btn-outline-danger"
+      [class.active]="mode() === 'delete'"
+      (click)="setMode('delete')"
+    >
+      Összekapcsolás törlése
+    </button>
+  </div>
+
+  <ngb-alert
+    *ngIf="alertMsg()"
+    [type]="alertType() ?? 'warning'"
+    [dismissible]="true"
+    (closed)="alertMsg.set(null)"
+  >
+    {{ alertMsg() }}
+  </ngb-alert>
+
+  <!-- SAJÁT TOKEN LINK (kijelölhető felület) -->
+  <div class="card mb-4" [hidden]="mode() !== 'token'">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0">Saját token</h5>
+      </div>
+
+      <div class="input-group">
+        <input
+          #tokenBox
+          type="text"
+          class="form-control selectable-box"
+          [value]="myToken()"
+          readonly
+          (click)="selectAll(tokenBox)"
+        />
+        <button class="btn btn-outline-secondary" (click)="copy(myToken())">
+          Másolás
+        </button>
+      </div>
+
+      <small class="text-muted d-block mt-2">
+        Tipp: kattints a mezőre a teljes kijelöléshez, majd másold a vágólapra.
+      </small>
+    </div>
+  </div>
+
+  <!-- MÓDOK -->
+  <div [hidden]="mode() !== 'email'">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Meghívó küldése e‑mailben</h5>
+
+        <form [formGroup]="emailForm" (ngSubmit)="sendInviteEmail()">
+          <label class="form-label">Partner e‑mail címe</label>
+          <input
+            type="email"
+            class="form-control"
+            placeholder="partner@example.com"
+            formControlName="email"
+          />
+          <div
+            class="form-text text-danger"
+            *ngIf="
+              emailForm.controls.email.touched &&
+              emailForm.controls.email.invalid
+            "
+          >
+            Adj meg érvényes e‑mail címet.
+          </div>
+
+          <div class="mt-3">
+            <button
+              class="btn btn-primary"
+              type="submit"
+              [disabled]="this.loading | async"
+            >
+              Meghívó küldése
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div [hidden]="mode() !== 'token'">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Összekapcsolás tokennel</h5>
+
+        <form [formGroup]="tokenForm" (ngSubmit)="connectWithToken()">
+          <label class="form-label">Beérkezett token</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Illeszd be a partnered tokenét"
+            formControlName="token"
+          />
+
+          <div class="mt-3">
+            <button
+              class="btn btn-success"
+              [disabled]="this.loading | async"
+              type="submit"
+            >
+              Összekapcsolás
+            </button>
+          </div>
+        </form>
+
+        <hr />
+        <p class="mb-1">
+          <strong>Vagy:</strong> ha a partnerednek nincs még linkje/tokenje,
+          küldd el neki a fenti „Saját token linked”-et.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div [hidden]="mode() !== 'delete'">
+    <div class="card border-danger">
+      <div class="card-body">
+        <h5 class="card-title text-danger mb-2">Összekapcsolás törlése</h5>
+        <p class="mb-3">Ezzel megszünteted a jelenlegi párosítást.</p>
+        <button
+          class="btn btn-outline-danger"
+          [disabled]="this.loading | async"
+          (click)="disconnect()"
+        >
+          Kapcsolat bontása
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

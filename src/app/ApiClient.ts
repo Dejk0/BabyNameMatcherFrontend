@@ -802,7 +802,7 @@ export class ApiClient {
      * @param body (optional) 
      * @return OK
      */
-    getRandomName(body: NameSelectionFilterConditions | undefined): Observable<NameSelectrionResultDto[]> {
+    getRandomName(body: NameSelectionFilterConditions | undefined): Observable<NameSelectrionResultDto> {
         let url_ = this.baseUrl + "/api/NameSelection/GetRandomName";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -825,14 +825,14 @@ export class ApiClient {
                 try {
                     return this.processGetRandomName(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<NameSelectrionResultDto[]>;
+                    return _observableThrow(e) as any as Observable<NameSelectrionResultDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<NameSelectrionResultDto[]>;
+                return _observableThrow(response_) as any as Observable<NameSelectrionResultDto>;
         }));
     }
 
-    protected processGetRandomName(response: HttpResponseBase): Observable<NameSelectrionResultDto[]> {
+    protected processGetRandomName(response: HttpResponseBase): Observable<NameSelectrionResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -843,14 +843,7 @@ export class ApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(NameSelectrionResultDto.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
+            result200 = NameSelectrionResultDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1095,6 +1088,386 @@ export class ApiClient {
         }
         return _observableOf(null as any);
     }
+
+    /**
+     * @return OK
+     */
+    getMatchedNames(): Observable<NameSelectrionResultDto[]> {
+        let url_ = this.baseUrl + "/api/NameSelection/GetMatchedNames";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetMatchedNames(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetMatchedNames(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<NameSelectrionResultDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<NameSelectrionResultDto[]>;
+        }));
+    }
+
+    protected processGetMatchedNames(response: HttpResponseBase): Observable<NameSelectrionResultDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(NameSelectrionResultDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getUserPartnerName(): Observable<GetPartnerUserNameResultDto> {
+        let url_ = this.baseUrl + "/api/User/GetUserPartnerName";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUserPartnerName(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserPartnerName(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetPartnerUserNameResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetPartnerUserNameResultDto>;
+        }));
+    }
+
+    protected processGetUserPartnerName(response: HttpResponseBase): Observable<GetPartnerUserNameResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetPartnerUserNameResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param token (optional) 
+     * @return OK
+     */
+    confirmPartnerLink(id: string | undefined, token: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/User/ConfirmPartnerLink?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (token === null)
+            throw new Error("The parameter 'token' cannot be null.");
+        else if (token !== undefined)
+            url_ += "token=" + encodeURIComponent("" + token) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processConfirmPartnerLink(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processConfirmPartnerLink(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processConfirmPartnerLink(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    setUserPartnerWithEmail(body: SetUserPartnerParamsDto | undefined): Observable<BaseValidResponse> {
+        let url_ = this.baseUrl + "/api/User/SetUserPartnerWithEmail";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetUserPartnerWithEmail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetUserPartnerWithEmail(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BaseValidResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BaseValidResponse>;
+        }));
+    }
+
+    protected processSetUserPartnerWithEmail(response: HttpResponseBase): Observable<BaseValidResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = BaseValidResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    setUserpartnerWithLinkToken(body: SetUserPartnerParamsDto | undefined): Observable<BaseValidResponse> {
+        let url_ = this.baseUrl + "/api/User/SetUserpartnerWithLinkToken";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetUserpartnerWithLinkToken(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetUserpartnerWithLinkToken(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BaseValidResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BaseValidResponse>;
+        }));
+    }
+
+    protected processSetUserpartnerWithLinkToken(response: HttpResponseBase): Observable<BaseValidResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = BaseValidResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getUserTokenLink(): Observable<GetUserTokenLinkResultDto> {
+        let url_ = this.baseUrl + "/api/User/GetUserTokenLink";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUserTokenLink(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserTokenLink(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetUserTokenLinkResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetUserTokenLinkResultDto>;
+        }));
+    }
+
+    protected processGetUserTokenLink(response: HttpResponseBase): Observable<GetUserTokenLinkResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetUserTokenLinkResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    clearUserPairId(): Observable<ClearUsersPairIdsResultDto> {
+        let url_ = this.baseUrl + "/api/User/ClearUserPairId";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processClearUserPairId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processClearUserPairId(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ClearUsersPairIdsResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ClearUsersPairIdsResultDto>;
+        }));
+    }
+
+    protected processClearUserPairId(response: HttpResponseBase): Observable<ClearUsersPairIdsResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ClearUsersPairIdsResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 export class BaseValidResponse implements IBaseValidResponse {
@@ -1221,6 +1594,54 @@ export interface IChangePasswordParamsDto {
     newPassword?: string | undefined;
 }
 
+export class ClearUsersPairIdsResultDto implements IClearUsersPairIdsResultDto {
+    isValid?: boolean;
+    message?: string[] | undefined;
+
+    constructor(data?: IClearUsersPairIdsResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isValid = _data["isValid"];
+            if (Array.isArray(_data["message"])) {
+                this.message = [] as any;
+                for (let item of _data["message"])
+                    this.message!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): ClearUsersPairIdsResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ClearUsersPairIdsResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isValid"] = this.isValid;
+        if (Array.isArray(this.message)) {
+            data["message"] = [];
+            for (let item of this.message)
+                data["message"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IClearUsersPairIdsResultDto {
+    isValid?: boolean;
+    message?: string[] | undefined;
+}
+
 export class GetFamilyNameResult implements IGetFamilyNameResult {
     isValid?: boolean;
     message?: string[] | undefined;
@@ -1271,6 +1692,110 @@ export interface IGetFamilyNameResult {
     isValid?: boolean;
     message?: string[] | undefined;
     familyName?: string | undefined;
+}
+
+export class GetPartnerUserNameResultDto implements IGetPartnerUserNameResultDto {
+    isValid?: boolean;
+    message?: string[] | undefined;
+    partnerUserName?: string | undefined;
+
+    constructor(data?: IGetPartnerUserNameResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isValid = _data["isValid"];
+            if (Array.isArray(_data["message"])) {
+                this.message = [] as any;
+                for (let item of _data["message"])
+                    this.message!.push(item);
+            }
+            this.partnerUserName = _data["partnerUserName"];
+        }
+    }
+
+    static fromJS(data: any): GetPartnerUserNameResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetPartnerUserNameResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isValid"] = this.isValid;
+        if (Array.isArray(this.message)) {
+            data["message"] = [];
+            for (let item of this.message)
+                data["message"].push(item);
+        }
+        data["partnerUserName"] = this.partnerUserName;
+        return data;
+    }
+}
+
+export interface IGetPartnerUserNameResultDto {
+    isValid?: boolean;
+    message?: string[] | undefined;
+    partnerUserName?: string | undefined;
+}
+
+export class GetUserTokenLinkResultDto implements IGetUserTokenLinkResultDto {
+    isValid?: boolean;
+    message?: string[] | undefined;
+    tokenLink?: string | undefined;
+
+    constructor(data?: IGetUserTokenLinkResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isValid = _data["isValid"];
+            if (Array.isArray(_data["message"])) {
+                this.message = [] as any;
+                for (let item of _data["message"])
+                    this.message!.push(item);
+            }
+            this.tokenLink = _data["tokenLink"];
+        }
+    }
+
+    static fromJS(data: any): GetUserTokenLinkResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetUserTokenLinkResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isValid"] = this.isValid;
+        if (Array.isArray(this.message)) {
+            data["message"] = [];
+            for (let item of this.message)
+                data["message"].push(item);
+        }
+        data["tokenLink"] = this.tokenLink;
+        return data;
+    }
+}
+
+export interface IGetUserTokenLinkResultDto {
+    isValid?: boolean;
+    message?: string[] | undefined;
+    tokenLink?: string | undefined;
 }
 
 export class LocalizationParamsDto implements ILocalizationParamsDto {
@@ -1791,6 +2316,46 @@ export class SelectNameParams implements ISelectNameParams {
 export interface ISelectNameParams {
     id?: number;
     holdingTime?: string;
+}
+
+export class SetUserPartnerParamsDto implements ISetUserPartnerParamsDto {
+    email?: string | undefined;
+    linkToken?: string | undefined;
+
+    constructor(data?: ISetUserPartnerParamsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.email = _data["email"];
+            this.linkToken = _data["linkToken"];
+        }
+    }
+
+    static fromJS(data: any): SetUserPartnerParamsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SetUserPartnerParamsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["email"] = this.email;
+        data["linkToken"] = this.linkToken;
+        return data;
+    }
+}
+
+export interface ISetUserPartnerParamsDto {
+    email?: string | undefined;
+    linkToken?: string | undefined;
 }
 
 export class TokenResponse implements ITokenResponse {

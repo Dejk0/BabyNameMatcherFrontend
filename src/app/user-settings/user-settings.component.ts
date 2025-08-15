@@ -16,6 +16,8 @@ import { map, Observable, of, Subject, take, takeUntil, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { jwtDecode } from 'jwt-decode';
 import { NamesListComponent } from '../names-list/names-list.component';
+import { SetUserPartnerComponent } from '../set-user-partner/set-user-partner.component';
+import { loadTranslations } from '@angular/localize';
 
 @Component({
   selector: 'app-user-settings',
@@ -23,7 +25,6 @@ import { NamesListComponent } from '../names-list/names-list.component';
   imports: [CommonModule, ReactiveFormsModule],
 })
 export class UserSettingsComponent implements OnInit {
-  private destroy$ = new Subject<void>();
   public nameController = new FormControl('', [Validators.required]);
   public familyNameController = new FormControl('', [Validators.required]);
   familyName = '';
@@ -31,6 +32,8 @@ export class UserSettingsComponent implements OnInit {
     name: this.nameController,
     familyName: this.familyNameController,
   });
+
+  partnerName = '';
   constructor(
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
@@ -43,20 +46,22 @@ export class UserSettingsComponent implements OnInit {
     this.nameController.setValue(
       this.auth?.username?.value ? this.auth?.username?.value : ''
     );
+
     this.client
-      .getFamilyname()
+      .getUserPartnerName()
       .pipe(take(1))
-      .subscribe((x: GetFamilyNameResult) => {
-        if (!x) {
-          return;
+      .subscribe((x) => {
+        if (x.isValid) {
+          if (x.partnerUserName) {
+            this.partnerName = x.partnerUserName;
+          }
+        } else {
         }
-        if (!x.isValid && x.message) {
-          window.alert(x?.message.join('\n'));
-        }
-        const familyName = x?.familyName ? x?.familyName : '';
-        this.familyName = familyName;
-        this.familyNameController.setValue(familyName);
       });
+
+    this.familyNameController.setValue(
+      this.auth.getUserSelectedFamilyname$().value
+    );
   }
 
   save() {
@@ -66,16 +71,7 @@ export class UserSettingsComponent implements OnInit {
       const settings = this.settingsForm.value;
 
       if (familyName !== this.familyName) {
-        this.client
-          .changeFamilyname({
-            newName: familyName,
-          } as ChangeNameParams)
-          .pipe(take(1))
-          .subscribe((x) => {
-            if (!x.isValid && x.message) {
-              window.alert(x?.message.join('\n'));
-            }
-          });
+        this.loadPartnerName();
       }
 
       if (name !== this.auth.username?.value) {
@@ -124,6 +120,42 @@ export class UserSettingsComponent implements OnInit {
       centered: true,
     });
     ref.componentInstance.isThrowedNames = true;
+  }
+
+  openMatchedNamesModal() {
+    const ref = this.modalService.open(NamesListComponent, {
+      size: 'md',
+      backdrop: 'static',
+      centered: true,
+    });
+    ref.componentInstance.isMatchedNames = true;
+  }
+
+  openUserPartnerModal() {
+    const ref = this.modalService.open(SetUserPartnerComponent, {
+      size: 'md',
+      backdrop: 'static',
+      centered: true,
+    });
+
+    ref.result.then((x) => {
+      this.loadPartnerName();
+    });
+  }
+
+  loadPartnerName() {
+    this.client
+      .getUserPartnerName()
+      .pipe(take(1))
+      .subscribe((x) => {
+        if (x.isValid) {
+          if (x.partnerUserName) {
+            this.partnerName = x.partnerUserName;
+          }
+        } else {
+          this.partnerName = '';
+        }
+      });
   }
 
   close() {

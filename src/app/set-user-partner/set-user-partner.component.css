@@ -1,0 +1,10 @@
+.selectable-box {
+  user-select: all;
+  cursor: pointer;
+}
+.card {
+  border-radius: 1rem;
+}
+.btn-group .btn.active {
+  color: #fff;
+}

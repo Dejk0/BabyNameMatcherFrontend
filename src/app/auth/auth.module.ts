@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, tap } from 'rxjs/operators';
+import { catchError, map, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ApiClient, LoginParamsDto, TokenResponse } from '../ApiClient';
+import {
+  ApiClient,
+  GetFamilyNameResult,
+  LoginParamsDto,
+  TokenResponse,
+} from '../ApiClient';
 import { jwtDecode } from 'jwt-decode'; // ✅ Ez működik ESM alatt
 
 interface TokenPayload {
@@ -17,6 +22,8 @@ interface TokenPayload {
 export class AuthService {
   public readonly TOKEN_KEY = 'access_token';
   public username: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private userSelectedFamilyname: BehaviorSubject<string> =
+    new BehaviorSubject<string>('');
 
   constructor(private client: ApiClient) {}
 
@@ -42,6 +49,10 @@ export class AuthService {
 
   getUserName() {
     return this.username?.value;
+  }
+
+  getUserSelectedFamilyname$() {
+    return this.userSelectedFamilyname;
   }
 
   get token(): string | null {
@@ -70,22 +81,16 @@ export class AuthService {
     }
   }
 
-  refreshToken(): Observable<string> {
-    const token = localStorage.getItem(this.TOKEN_KEY);
-    if (!token) return new Observable((observer) => observer.error('No token'));
-
-    return this.client.sendingNewToken().pipe(
-      tap((response: TokenResponse) => {
-        if (response.token) {
-          localStorage.setItem(this.TOKEN_KEY, response.token);
-          const decoded = jwtDecode<TokenPayload>(response.token);
-          const username = decoded.name ?? decoded.username;
-          if (username) {
-            this.username.next(username);
-          }
+  refresFamilyName(): Observable<string | null> {
+    this.client
+      .getFamilyname()
+      .pipe(take(1))
+      .subscribe((x: GetFamilyNameResult) => {
+        if (x.isValid && x.familyName) {
+          this.userSelectedFamilyname.next(x.familyName);
         }
-      }),
-      map((res: TokenResponse) => (res.token ? res.token : ''))
-    );
+        return this.userSelectedFamilyname.asObservable();
+      });
+    return this.userSelectedFamilyname.asObservable();
   }
 }

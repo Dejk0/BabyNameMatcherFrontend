@@ -14,9 +14,11 @@ import {
   NameSelectrionResultDto,
   SelectNameParams,
 } from '../ApiClient';
-import { take, timestamp } from 'rxjs';
+import { skip, take, timestamp } from 'rxjs';
 import { MainfilterComponent } from '../mainfilter/mainfilter.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from '../auth/auth.module';
+import { NumberValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -32,10 +34,12 @@ export class HomeComponent {
   private animationInterval: any;
   private scrollY = 0;
   private isDragging = false;
+  public familyName: string = '';
 
   constructor(
     private readonly client: ApiClient,
-    private readonly modal: NgbModal
+    private readonly modal: NgbModal,
+    private auth: AuthService
   ) {}
 
   load(params: NameSelectionFilterConditions) {
@@ -53,7 +57,9 @@ export class HomeComponent {
         }
       });
   }
+
   ngOnInit() {
+    this.setFamilyName();
     const params = new NameSelectionFilterConditions();
     const gender = localStorage.getItem('gender');
     if (gender) {
@@ -101,6 +107,17 @@ export class HomeComponent {
     const mt = parseFloat(cs.marginTop || '0');
     const mb = parseFloat(cs.marginBottom || '0');
     return r.height + mt + mb;
+  }
+
+  setFamilyName() {
+    this.auth
+      .refresFamilyName()
+      .pipe(skip(1), take(1))
+      .subscribe((x) => {
+        if (x) {
+          this.familyName = x;
+        }
+      });
   }
 
   startAutoScroll() {
@@ -223,7 +240,6 @@ export class HomeComponent {
       centered: true,
       backdrop: 'static',
     });
-
     ref.result
       .then((result: NameSelectionFilterConditions) => {
         if (result) {

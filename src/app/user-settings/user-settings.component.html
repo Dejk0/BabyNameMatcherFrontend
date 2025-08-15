@@ -9,6 +9,25 @@
 </div>
 
 <div class="modal-body">
+  <div class="mb-3">
+    <ng-container *ngIf="!partnerName; else templateName">
+      <button class="btn btn-primary" (click)="openUserPartnerModal()">
+        Partner Felvétele
+      </button>
+    </ng-container>
+
+    <ng-template #templateName>
+      <p *ngIf="partnerName">PartnerNév: {{ partnerName }}</p>
+      <button
+        *ngIf="partnerName"
+        class="btn btn-primary"
+        (click)="openUserPartnerModal()"
+      >
+        Partner Módosítása
+      </button>
+    </ng-template>
+  </div>
+
   <form [formGroup]="settingsForm">
     <div class="mb-3">
       <label>{{ loc.get(22, "Name") }}</label>
@@ -20,9 +39,15 @@
       <input type="text" class="form-control" formControlName="familyName" />
     </div>
   </form>
+
   <div class="mb-3">
     <button class="btn btn-primary" (click)="openChangePasswordModal()">
       {{ loc.get(24, "Change password") }}
+    </button>
+  </div>
+  <div class="mb-3">
+    <button class="btn btn-primary" (click)="openMatchedNamesModal()">
+      Match
     </button>
   </div>
   <div class="mb-3">

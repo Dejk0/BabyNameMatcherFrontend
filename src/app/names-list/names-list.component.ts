@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ApiClient, NameSelectrionResultDto } from '../ApiClient';
-import { take } from 'rxjs';
+import { catchError, of, take } from 'rxjs';
 import { NameCardComponent } from '../name-card/name-card.component';
 import { NamebuttonsComponent } from '../namebuttons/namebuttons.component';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -18,6 +18,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 export class NamesListComponent implements OnInit {
   names: NameSelectrionResultDto[] = [];
   isThrowedNames? = false;
+  isMatchedNames? = false;
   placeholder = '';
   searchCtrl = new FormControl<string>('', { nonNullable: true });
 
@@ -40,6 +41,18 @@ export class NamesListComponent implements OnInit {
   }
 
   load() {
+    if (this.isMatchedNames) {
+      this.client
+        .getMatchedNames()
+        .pipe(take(1))
+        .subscribe((x) => {
+          if (x) {
+            x.map((y) => this.names.push(y));
+          }
+        });
+      return;
+    }
+
     if (this.isThrowedNames) {
       this.client
         .getThrowedNames()
@@ -83,7 +96,12 @@ export class NamesListComponent implements OnInit {
         // ✅ Felhasználó megerősítette
         this.client
           .changeSelectedName(id)
-          .pipe(take(1))
+          .pipe(
+            take(1),
+            catchError((error) => {
+              return of(null); // 👈 fontos: kell visszatérés, különben megszakad a stream
+            })
+          )
           .subscribe((x) => {
             if (x) {
               this.names = [];

@@ -67,7 +67,7 @@ button:hover {
   position: fixed;
   right: 24px;
   bottom: 24px; /* ha inkább oldal közepére szeretnéd: top: 50%; transform: translateY(-50%); */
-  z-index: 2000; /* a drag-elt kártyák fölé kerüljön */
+  z-index: 1; /* a drag-elt kártyák fölé kerüljön */
   padding: 10px 16px;
   border: none;
   border-radius: 999px;
