@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, input, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ApiClient, NameSelectrionResultDto } from '../ApiClient';
 import { catchError, of, take } from 'rxjs';
@@ -8,6 +8,7 @@ import { NamebuttonsComponent } from '../namebuttons/namebuttons.component';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LocalizationService } from '../services/localization.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { AuthService } from '../auth/auth.module';
 
 @Component({
   selector: 'app-names-list',
@@ -16,6 +17,8 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
   styleUrl: './names-list.component.css',
 })
 export class NamesListComponent implements OnInit {
+  @Input() hasPair: boolean = false;
+
   names: NameSelectrionResultDto[] = [];
   isThrowedNames? = false;
   isMatchedNames? = false;
@@ -32,7 +35,8 @@ export class NamesListComponent implements OnInit {
     private readonly client: ApiClient,
     public loc: LocalizationService,
     private readonly activeModal: NgbActiveModal,
-    private readonly modalService: NgbModal
+    private readonly modalService: NgbModal,
+    public auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -99,7 +103,7 @@ export class NamesListComponent implements OnInit {
           .pipe(
             take(1),
             catchError((error) => {
-              return of(null); // 👈 fontos: kell visszatérés, különben megszakad a stream
+              return of(null);
             })
           )
           .subscribe((x) => {

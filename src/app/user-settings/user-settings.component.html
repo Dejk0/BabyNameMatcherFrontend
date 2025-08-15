@@ -12,18 +12,20 @@
   <div class="mb-3">
     <ng-container *ngIf="!partnerName; else templateName">
       <button class="btn btn-primary" (click)="openUserPartnerModal()">
-        Partner Felvétele
+        {{ loc.get(1088, "Add Partner") }}
       </button>
     </ng-container>
 
     <ng-template #templateName>
-      <p *ngIf="partnerName">PartnerNév: {{ partnerName }}</p>
+      <p *ngIf="partnerName">
+        {{ loc.get(18, "Your partner's username") }}: {{ partnerName }}
+      </p>
       <button
         *ngIf="partnerName"
         class="btn btn-primary"
         (click)="openUserPartnerModal()"
       >
-        Partner Módosítása
+        {{ loc.get(1087, "Change Partner") }}
       </button>
     </ng-template>
   </div>

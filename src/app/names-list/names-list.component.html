@@ -3,6 +3,8 @@
     {{
       this.isThrowedNames
         ? loc.get(35, "Throwed names")
+        : this.isMatchedNames
+        ? loc.get(36, "Matched names")
         : loc.get(34, "Selected names")
     }}
   </h4>
@@ -14,7 +16,7 @@
   ></button>
 </div>
 
-<div class="px-3 pb-2 mb-3 mt-2">
+<div class="px-3 pb-2 mb-3 mt-2" *ngIf="names.length > 0">
   <input
     type="text"
     class="form-control"
@@ -32,3 +34,5 @@
     (clicked)="onClick(item)"
   ></app-namebuttons>
 </div>
+
+<div *ngIf="names.length === 0 && !hasPair">Válasz párt</div>

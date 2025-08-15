@@ -129,6 +129,7 @@ export class UserSettingsComponent implements OnInit {
       centered: true,
     });
     ref.componentInstance.isMatchedNames = true;
+    ref.componentInstance.hasPair = false;
   }
 
   openUserPartnerModal() {
