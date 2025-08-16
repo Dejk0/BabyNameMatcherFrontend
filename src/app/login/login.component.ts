@@ -12,7 +12,7 @@ import {
   NgbModal,
   NgbModalRef,
 } from '@ng-bootstrap/ng-bootstrap';
-import { Subject } from 'rxjs';
+import { finalize, skip, Subject, take } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { LocPipe } from '../pipes/loc.pipe';
 import { LocalizationService } from '../services/localization.service';
@@ -45,8 +45,8 @@ export class LoginComponent implements OnDestroy {
     public loc: LocalizationService
   ) {}
 
-  close() {
-    this.modal.close();
+  close(result: boolean) {
+    this.modal.close(result);
   }
 
   dismiss() {
@@ -63,7 +63,16 @@ export class LoginComponent implements OnDestroy {
     this.auth.login(email, password).subscribe({
       next: () => {
         // pl. navigáció főoldalra
-        this.modal.close();
+        this.auth
+          .refresFamilyName()
+          .pipe(
+            skip(1),
+            take(1),
+            finalize(() => {
+              this.modal.close(true);
+            })
+          )
+          .subscribe();
       },
       error: (err) => {
         alert('Hibás email vagy jelszó!');

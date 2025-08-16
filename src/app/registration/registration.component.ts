@@ -64,8 +64,8 @@ export class RegistrationComponent {
     public loc: LocalizationService
   ) {}
 
-  close() {
-    this.modal.close();
+  close(result: string) {
+    this.modal.close(result);
   }
 
   dismiss() {
@@ -117,7 +117,7 @@ export class RegistrationComponent {
             return;
           }
           console.log(res);
-          this.modal.close();
+          this.modal.close('Waiting for email confirm');
         });
     } else {
       this.client
@@ -135,7 +135,7 @@ export class RegistrationComponent {
             return;
           }
           console.log(res);
-          this.modal.close();
+          this.modal.close('Waiting for email confirm');
         });
     }
   }

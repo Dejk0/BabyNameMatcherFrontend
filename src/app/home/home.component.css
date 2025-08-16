@@ -49,6 +49,7 @@ button:hover {
 
 .scroll-content {
   display: flex;
+  gap: 16px;
   flex-direction: column;
   justify-content: center;
   margin: 0 auto;
@@ -76,6 +77,29 @@ button:hover {
   cursor: pointer;
 }
 
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -8px; /* mennyivel nyúljon túl (pl. 8px) */
+  /* nincs háttér, de pointer-events aktív → elkapja a hover-t */
+}
+
 .filter-fab:hover {
   opacity: 0.9;
+}
+
+.cdk-drag-dragging {
+  z-index: 100;
+}
+
+/* a kurzort követő “preview” */
+.cdk-drag-preview {
+  z-index: 000;
+  /* Ha azt is szeretnéd, hogy alatta ne “hover-ölődjenek” a kártyák: */
+  /* pointer-events: auto;  // csak akkor, ha nem használsz cdkDropList-et */
+}
+
+/* opcionális: a placeholder ne zavarjon */
+.cdk-drag-placeholder {
+  opacity: 0;
 }

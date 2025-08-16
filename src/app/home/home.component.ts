@@ -14,11 +14,14 @@ import {
   NameSelectrionResultDto,
   SelectNameParams,
 } from '../ApiClient';
-import { skip, take, timestamp } from 'rxjs';
+import { finalize, from, skip, take, timestamp } from 'rxjs';
 import { MainfilterComponent } from '../mainfilter/mainfilter.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbToast } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../auth/auth.module';
 import { NumberValueAccessor } from '@angular/forms';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { LoginComponent } from '../login/login.component';
+import { LoginOrRegisterComponentComponent } from '../login-or-register-component/login-or-register-component.component';
 
 @Component({
   selector: 'app-home',
@@ -34,6 +37,7 @@ export class HomeComponent {
   private animationInterval: any;
   private scrollY = 0;
   private isDragging = false;
+  private isLoginProccess = false;
   public familyName: string = '';
 
   constructor(
@@ -59,7 +63,14 @@ export class HomeComponent {
   }
 
   ngOnInit() {
-    this.setFamilyName();
+    if (this.auth.isLoggedIn) {
+      this.setFamilyName();
+    }
+
+    this.auth.userSelectedFamilyname.pipe().subscribe((x) => {
+      this.familyName = x;
+    });
+
     const params = new NameSelectionFilterConditions();
     const gender = localStorage.getItem('gender');
     if (gender) {
@@ -123,7 +134,11 @@ export class HomeComponent {
       if (!el) return;
 
       const windowHeight = window.innerHeight;
-      if (!this.isDragging && el.scrollHeight > windowHeight - 50) {
+      if (
+        !this.isDragging &&
+        el.scrollHeight > windowHeight - 50 &&
+        !this.isLoginProccess
+      ) {
         // 1) ha még nincs limit, mérjük meg az első (index 0) wrappert
         if (!this.currentItemLimit) {
           this.currentItemLimit = this.getItemHeight(0);
@@ -146,9 +161,9 @@ export class HomeComponent {
 
         el.style.transform = `translateY(${this.scrollY}px)`;
       } else {
-        this.scrollY = 0;
-        this.currentItemLimit = 0; // reset
-        el.style.transform = `translateY(0px)`;
+        // this.scrollY = 0;
+        // this.currentItemLimit = 0; // reset
+        // el.style.transform = `translateY(0px)`;
       }
     }, 1);
   }
@@ -187,15 +202,43 @@ export class HomeComponent {
     const item = this.names[index];
     const id = item?.id;
 
+    const isUserAuthenticated = this.auth.isLoggedIn;
+
     if (this.dragedPointX > 0) {
       if (this.dragedPointX >= threshold) {
-        if (id != null) this.selectedById(id); // ← id-vel hívjuk
-        this.names.splice(index, 1); // ← csak utána törlünk
+        if (id != null) {
+          if (isUserAuthenticated) {
+            this.selectedById(id);
+            this.names.splice(index, 1);
+          } else {
+            from(this.isUserAuthenticated())
+              .pipe(take(1))
+              .subscribe((x) => {
+                if (x) {
+                  this.selectedById(id);
+                  this.names.splice(index, 1);
+                }
+              });
+          }
+        }
       }
     } else {
       if (this.dragedPointX <= -threshold) {
-        if (id != null) this.throwedById(id);
-        this.names.splice(index, 1);
+        if (id != null) {
+          if (isUserAuthenticated) {
+            this.throwedById(id);
+            this.names.splice(index, 1);
+          } else {
+            from(this.isUserAuthenticated())
+              .pipe(take(1))
+              .subscribe((x) => {
+                if (x) {
+                  this.throwedById(id);
+                  this.names.splice(index, 1);
+                }
+              });
+          }
+        }
       }
     }
 
@@ -250,5 +293,36 @@ export class HomeComponent {
         }
       })
       .catch(() => {});
+  }
+
+  async isUserAuthenticated() {
+    if (this.auth.isLoggedIn) return true;
+
+    this.isLoginProccess = true;
+    try {
+      const confirmRef = this.modal.open(ConfirmDialogComponent, {
+        centered: true,
+      });
+      confirmRef.componentInstance.title = 'Hiba';
+      confirmRef.componentInstance.message =
+        'Kérlek, jelentkezz be a folytatáshoz!';
+
+      const confirmed = await confirmRef.result
+        .then(() => true)
+        .catch(() => false);
+      if (!confirmed) return false;
+
+      const loginRef = this.modal.open(LoginOrRegisterComponentComponent, {
+        centered: true,
+      });
+      const loginResult = await loginRef.result
+        .then((v) => v)
+        .catch(() => null);
+
+      if (loginResult === 'Waiting for email confirm') return false;
+      return !!loginResult; // true, ha sikeres login
+    } finally {
+      this.isLoginProccess = false;
+    }
   }
 }

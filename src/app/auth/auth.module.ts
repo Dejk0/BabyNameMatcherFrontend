@@ -45,14 +45,11 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
+    this.userSelectedFamilyname.next('');
   }
 
   getUserName() {
     return this.username?.value;
-  }
-
-  getUserSelectedFamilyname$() {
-    return this.userSelectedFamilyname;
   }
 
   get token(): string | null {
